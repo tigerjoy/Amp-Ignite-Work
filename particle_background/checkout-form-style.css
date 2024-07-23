@@ -1,0 +1,130 @@
+/* ------------------------------------------------*/
+/* Popup Dialogs Start */
+/* ------------------------------------------------*/
+:root {
+  --transparent-bg: rgba(9, 5, 22, 0.3);
+  --accent-rgb: 107, 87, 255;
+  --_radius-s: 2rem;
+  --_radius-m: 3rem;
+  --_radius-l: 5rem;
+  --t-per-bright-light: #ffffff;
+}
+
+.popup {
+  /* position: fixed; */
+  /* top: 0; */
+  /* left: 0; */
+  /* width: 100%; */
+  /* min-width: 360px; */
+  /* height: 100%; */
+  /* overflow-y: auto; */
+  background-color: var(--transparent-bg);
+  z-index: 10;
+}
+
+.popup__container {
+  position: relative;
+  padding: 2rem;
+}
+
+@media only screen and (min-width: 768px) {
+  .popup__container {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    bottom: auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    padding: 0;
+  }
+}
+
+.popup__content {
+  position: relative;
+  width: 100%;
+  height: auto;
+  background-color: rgba(var(--accent-rgb), 0.14);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  -moz-border-radius: var(--_radius-s);
+  border-radius: var(--_radius-s);
+  padding: 3rem;
+  z-index: 1;
+}
+
+@media only screen and (min-width: 768px) {
+  .popup__content {
+    max-width: 510px;
+    -moz-border-radius: var(--_radius-m);
+    border-radius: var(--_radius-m);
+    padding: 6rem;
+    margin: 0 auto;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .popup__content {
+    max-width: 640px;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .popup__content {
+    padding: 8rem;
+    max-width: 740px;
+  }
+}
+
+.popup-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5rem;
+  height: 5rem;
+  background-color: transparent;
+  font-size: 2rem;
+  text-align: center;
+  line-height: 5rem;
+  color: var(--t-per-bright-light);
+}
+
+.no-touch .popup-close:hover {
+  color: var(--t-per-muted-light);
+}
+
+@media only screen and (min-width: 768px) {
+  .popup-close {
+    width: 6rem;
+    height: 6rem;
+    line-height: 6rem;
+  }
+}
+
+@supports ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(20px))) {
+  .popup__content {
+    background-color: rgba(var(--accent-rgb), 0.14);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(20px))) {
+  .popup__content {
+    background-color: var(--accent);
+  }
+}
+
+.popup-title {
+  position: relative;
+}
+
+.mfp-bg {
+  background: var(--transparent-bg);
+}
+
+/* ------------------------------------------------*/
+/* Popup Dialogs End */
+/* ------------------------------------------------*/

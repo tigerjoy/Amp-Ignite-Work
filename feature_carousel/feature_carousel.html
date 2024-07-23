@@ -1,0 +1,805 @@
+<tab-navigation id="feature-navigation" initialize="false"></tab-navigation>
+
+<script type="module" id="navigation-button">
+    import { LitElement, html, css } from 'https://cdn.jsdelivr.net/gh/lit/dist@3.1.4/all/lit-all.min.js';
+
+    export class NavigationButton extends LitElement {
+        static properties = {
+            active: { type: Boolean },
+            name: { type: String },
+            key: { type: String }
+        };
+
+        static styles = css`
+            .custom-tab-button {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                inline-size: 115px;
+                padding: 0;
+                border: unset;
+                background-color: transparent;
+                transition: transform .2s ease-in-out;
+            }
+
+            .custom-button {
+                --color-icon: rgb(var(--color-white, 255, 255, 255));
+                --button-bg: var(--highlight-primary, var(--color-purple, 123, 104, 238));
+                --button-text: var(--color-white, 255, 255, 255);
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                padding: var(--button-padding, var(--size-18, 1.125rem) var(--size-32, 2rem) var(--size-16, 1rem));
+                border: var(--button-border, unset);
+                border-radius: var(--button-border-radius, var(--border-radius-xs, 9px));
+                background-color: rgb(var(--button-bg));
+                color: rgb(var(--button-text));
+                font-weight: 700;
+                font-size: var(--button-font-size, var(--size-14, 0.875rem));
+                transition: var(--button-transition, var(--transition-short,  0.25s cubic-bezier(0.5, 0, 0.5, 1)));
+                transform: translateY(0);
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
+
+            .custom-button:active,
+            .custom-button:hover {
+                cursor: pointer;
+                transform: translateY(1px);
+            }
+
+            .custom-button-shadow {
+                --shadow-color: var(--button-shadow-color, var(--highlight-shadow, var(--color-shadow, 16, 30, 54, 0.1)));
+                --shadow-size: var(--button-shadow-from, var(--shadow-button, 0 10px 25px));
+            }
+
+            .custom-button-shadow:after,
+            .custom-button-shadow:before {
+                content: "";
+                position: absolute;
+                inset-inline-start: 0;
+                inset-block-start: 0;
+                inline-size: 100%;
+                block-size: 100%;
+                border-radius: var(--button-border-radius, var(--border-radius, var(--border-radius-xs, 9px)));
+                transition: opacity var(--transition-short, 0.25s cubic-bezier(0.5, 0, 0.5, 1));
+            }
+
+            .custom-button-shadow:before {
+                box-shadow: var(--shadow-size) rgba(var(--shadow-color));
+                opacity: 1;
+            }
+
+            .custom-button-shadow:hover:before {
+                opacity: 0;
+            }
+
+            .custom-tab-button svg {
+                filter: drop-shadow(0 5px 20px rgba(127, 118, 179, .1));
+                transform: scale(.9);
+            }
+
+            .custom-tab-button {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                inline-size: 115px;
+                padding: 0;
+                border: unset;
+                background-color: transparent;
+                transition: transform .2s ease-in-out;
+            }
+
+            .custom-tab-button:after,
+            .custom-tab-button:before {
+                display: none;
+            }
+
+            .custom-tab-button:hover {
+                cursor: pointer;
+                transform: translateY(-3px);
+            }
+
+            .svg-container-wrapper {
+                flex-direction: column;
+                inline-size: 115px;
+            }
+
+            .svg-container-wrapper {
+                display: flex;
+                align-items: center;
+                filter: drop-shadow(0 5px 20px rgba(127, 118, 179, .1));
+            }
+
+            .svg-container-wrapper-active .svg-container {
+                background: linear-gradient(130deg, #24223e, #282642);
+                transform: scale(1.25);
+            }
+
+            .svg-container-wrapper-active .tab-title {
+                color: #24223e;
+                font-weight: 800;
+                font-size: 16px;
+            }
+
+            .svg-container {
+                display: flex;
+                align-items: center;
+                filter: drop-shadow(0 5px 20px rgba(127, 118, 179, .1));
+            }
+
+            .svg-container {
+                position: relative;
+                flex-shrink: 0;
+                justify-content: center;
+                inline-size: 55px;
+                block-size: 55px;
+                background: rgb(var(--color-white, 255, 255, 255));
+                background: linear-gradient(130deg, #f8f8fc, #f8f8fc);
+                -webkit-clip-path: path("M55 27.5C55 21.3548 54.7339 16.3754 54.3904 12.5079C53.8158 6.03697 48.963 1.18424 42.4921 0.609579C38.6246 0.266118 33.6452 0 27.5 0C21.3548 0 16.3754 0.266118 12.5079 0.609579C6.03697 1.18424 1.18424 6.03697 0.609579 12.5079C0.266118 16.3754 0 21.3548 0 27.5C0 33.8762 0.286505 38.9973 0.648635 42.9236C1.22382 49.1598 5.82715 53.8374 12.0652 54.3924C15.9146 54.7349 20.9952 55 27.5 55C34.0048 55 39.0854 54.7349 42.9348 54.3924C49.1729 53.8374 53.7762 49.1598 54.3514 42.9236C54.7135 38.9973 55 33.8762 55 27.5Z");
+                clip-path: path("M55 27.5C55 21.3548 54.7339 16.3754 54.3904 12.5079C53.8158 6.03697 48.963 1.18424 42.4921 0.609579C38.6246 0.266118 33.6452 0 27.5 0C21.3548 0 16.3754 0.266118 12.5079 0.609579C6.03697 1.18424 1.18424 6.03697 0.609579 12.5079C0.266118 16.3754 0 21.3548 0 27.5C0 33.8762 0.286505 38.9973 0.648635 42.9236C1.22382 49.1598 5.82715 53.8374 12.0652 54.3924C15.9146 54.7349 20.9952 55 27.5 55C34.0048 55 39.0854 54.7349 42.9348 54.3924C49.1729 53.8374 53.7762 49.1598 54.3514 42.9236C54.7135 38.9973 55 33.8762 55 27.5Z");
+            }
+
+            .svg-container-wrapper-active .svg-container {
+                background: linear-gradient(130deg, #24223e, #282642);
+                transform: scale(1.25);
+            }
+
+            .svg-container slot svg {
+                max-block-size: 32px;
+            }
+
+            .tab-title {
+                inline-size: 115px;
+                -webkit-margin-before: 11px;
+                margin-block-start: 11px;
+                color: #7b73ae;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: normal;
+                text-align: center;
+            }
+
+            .svg-container-wrapper-active .tab-title {
+                color: #24223e;
+                font-weight: 800;
+                font-size: 16px;
+            }
+
+            ::slotted(.svg-icon) path,
+            ::slotted(.svg-icon) rect {
+            stroke: rgb(var(--color-white, 255, 255, 255));
+            }
+
+            .svg-container-wrapper-active ::slotted(.svg-icon) {
+                stroke: rgb(var(--color-white, 255, 255, 255)) !important;
+            }
+
+            .svg-container-wrapper-active ::slotted(.svg-icon) path,
+            .svg-container-wrapper-active ::slotted(.svg-icon) rect {
+                stroke: rgb(var(--color-white, 255, 255, 255)) !important;
+            }
+        `;
+
+        constructor() {
+            super();
+        }
+
+        updated(changedProperties) {
+            const svgIcon = this.shadowRoot.querySelector('slot[name="svg-icon"]').assignedElements()[0];
+            if (svgIcon) {
+                if (this.active) {
+                    // Apply stroke to inner elements
+                    this._applyInnerStyles(svgIcon, 'rgb(var(--color-white, 255, 255, 255))');
+                } else {
+                    // Remove stroke from inner elements
+                    this._applyInnerStyles(svgIcon, '');
+                }
+            }
+        }
+
+        _applyInnerStyles(svgElement, strokeColor) {
+            const elements = svgElement.querySelectorAll('path, rect, line, polyline, circle');
+            elements.forEach((path) => {
+                path.style.stroke = strokeColor;
+            });
+        }
+
+        render() {
+            return html`
+      <button type="button" class="custom-button custom-button-shadow custom-tab-button" @click="${this._handleClick}">
+          <div class="svg-container-wrapper ${this.active ? 'svg-container-wrapper-active' : ''}">
+              <div class="svg-container">
+                  <slot name="svg-icon"></slot>
+              </div>
+              <div class="tab-title">
+                <slot name="title"></slot>
+              </div>
+          </div>
+      </button>
+    `;
+        }
+
+        _handleClick() {
+            this.dispatchEvent(new CustomEvent('navigation-button-click', {
+                detail: { active: this.active, name: this.name, key: this.key },
+                bubbles: true,
+                composed: true
+            }));
+        }
+    }
+
+    customElements.define('navigation-button', NavigationButton);
+</script>
+
+<script type="module" id="tab-content">
+    import { LitElement, html, css } from 'https://cdn.jsdelivr.net/gh/lit/dist@3.1.4/all/lit-all.min.js';
+
+    export class TabContent extends LitElement {
+        static properties = {
+            tabTitle: { attribute: "tab-title" },
+            primaryImageUrl: { attribute: "primary-image-url" },
+            secondaryImageUrl: { attribute: "secondary-image-url" },
+        };
+
+        static styles = css`
+        .tab-content-parent-container {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tab-content {
+            position: relative;
+            max-inline-size: fit-content;
+            z-index: 3;
+            margin-inline: 40px;
+        }
+
+        .tab-content-image-hidden {
+            display: none;
+        }
+
+        .tab-content-image {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background: linear-gradient(#fff, hsla(0, 0%, 100%, 0)) padding-box, linear-gradient(90deg, #45c4f9, #ff0be5) border-box;
+            opacity: 0;
+        }
+
+        .tab-content-image-secondary {
+            position: absolute;
+            display: none;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        @media (min-width: 1200px) {
+            .tab-content-image-secondary {
+                display: block;
+            }
+
+            .tab-content-image-hidden {
+                display: none;
+            }
+        }
+
+        .tab-content-image-secondary-offset {
+            inset-inline-end: -70px;
+            inset-block-end: -70px;
+        }
+
+        .tab-content-image-visible {
+            position: relative;
+            opacity: 1;
+            visibility: visible;
+            animation: CuHomeTabs_fadeIn__6V9ei .25s;
+        }
+
+        .tab-content-image-secondary-visible {
+            position: absolute;
+            opacity: 1;
+            animation: CuHomeTabs_fadeInSm__kaoqf .25s;
+        }
+
+        picture {
+            display: block;
+        }
+
+        .tab-content-image-secondary-visible picture {
+            transform: scale(.9);
+        }
+
+        img {
+            display: block;
+        }
+
+        img {
+            max-inline-size: 100%;
+        }
+
+        .tab-content-image img {
+            transform: scale(1.002);
+        }
+
+        img[width][height] {
+            block-size: auto;
+        }
+
+        @keyframes CuHomeTabs_fadeIn__6V9ei {
+            0% {
+                opacity: 0;
+                transform: translateY(2%);
+                opacity: 0;
+                transform: translateY(2%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                opacity: 1;
+                transform: translateY(0px);
+            }
+
+        }
+
+        @keyframes CuHomeTabs_fadeInSm__kaoqf {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, 10%, 0);
+                opacity: 0;
+                transform: translate3d(0px, 10%, 0px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateZ(0);
+                opacity: 1;
+                transform: translateZ(0px);
+            }
+
+        }
+    `;
+
+        constructor() {
+            super();
+            this.primaryImageUrl = "";
+            this.secondaryImageUrl = "";
+        }
+
+        render() {
+            return html`
+            <div class="tab-content-parent-container">
+                <div class="tab-content">
+                    <div class="tab-content-image ${this.primaryImageUrl ? "tab-content-image-visible" : "tab-content-image-hidden"}">
+                        <picture class="" data-testid="cu-image">
+                            <img src="${this.primaryImageUrl}" height="810" width="1080" alt="${this.tabTitle}" loading="eager"
+                                decoding="async">
+                        </picture>
+                    </div>
+                    <div class="tab-content-image-secondary ${this.secondaryImageUrl ? "tab-content-image-secondary-visible" : "tab-content-image-hidden"} tab-content-image-secondary-offset">
+                        <picture class="">
+                            <img src="${this.secondaryImageUrl}" height="393" width="658" alt="${this.tabTitle}" loading="eager"
+                                decoding="async">
+                        </picture>
+                    </div>
+                </div>
+            </div>
+        `;
+        }
+    }
+
+    customElements.define('tab-content', TabContent);
+</script>
+
+<script type="module" id="tab-navigation">
+    import { LitElement, html, css, unsafeHTML } from 'https://cdn.jsdelivr.net/gh/lit/dist@3.1.4/all/lit-all.min.js';
+
+    export class TabNavigation extends LitElement {
+        static properties = {
+            buttonConfiguration: { attribute: 'button-configuration' },
+            activeButtonIndex: { attribute: 'active-button-index' },
+            initialize: {}
+        };
+
+        static styles = css`
+            // * {
+            //     outline: 1px solid limegreen;
+            // }
+
+            .tab-decoration {
+                content: "";
+                position: absolute;
+                inset-block-end: 10px;
+                inline-size: 100%;
+                block-size: 100px;
+                background-image: url(https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669f45c7fe542b2960559dd6.png);
+                background-position: center -20px;
+                background-repeat: no-repeat;
+                background-size: 85%;
+                transform: scale(.9);
+                bottom: -20%;
+            }
+
+            @media (min-width: 1200px) {
+                .tab-decoration {
+                    block-size: 200px;
+                    background-size: unset;
+                    background-position: 50%;
+                    top: -50px;
+                    position: relative;
+                    bottom: unset;
+                }
+            }
+
+            .tab-container:after, .tab-container:before {
+                content: "";
+                position: absolute;
+                inset-block-start: 10px;
+                inline-size: 90px;
+                block-size: 100px;
+                background-image: url(https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669f33505f25696f1d343a3b.svg);
+                background-size: contain;
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            .tab-container::before {
+                inset-inline-start: 0px;
+                left: -1px;
+            }
+
+            .tab-container:after {
+                inset-inline-end: 0;
+                transform: rotate(180deg);
+            }
+
+            @media (min-width: 1200px) {
+                .tab-container::after, .tab-container::before {
+                    inset-block-start: -2px;
+                    inline-size: 200px;
+                    block-size: 200px;
+                }
+            }
+
+            .tab-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                overflow-x: clip;
+            }
+
+            .column {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .background-svg-left {
+                inset-inline-start: -220px;
+                inset-block-start: -5px;
+            }
+
+            .background-svg-right {
+                inset-inline-start: 200px;
+                inset-block-start: -10px;
+            }
+
+            .background-svg-left, .background-svg-right {
+                display: none;
+            }
+            
+            @media (min-width: 1200px) {
+                .background-svg-left, .background-svg-right {
+                    display: block;
+                }
+            }
+
+            .background-svg-left, .background-svg-mobile, .background-svg-right {
+                position: absolute;
+                z-index: 2;
+                pointer-events: none;
+            }
+
+            .background-svg-mobile {
+                inset-block-start: 8%;
+                display: block;
+                inline-size: 100%;
+                block-size: 371px;
+                background-image: url(https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669f4b0a5f25692a5e344f55.svg);
+                background-repeat: no-repeat;
+                background-size: 111% auto;
+                background-position: 50%;
+                overflow: hidden;
+            }
+
+            @media (min-width: 1200px) {
+                .background-svg-mobile {
+                    display: none;
+                }
+            }
+        `;
+
+        constructor() {
+            super();
+            this.buttonConfiguration = [];
+            this.activeButtonIndex = 0;
+            this.initialize = "true";
+            this.resetButtons();
+
+            console.log("After resetButtons:", this.buttonConfiguration);
+        }
+
+        resetButtons() {
+            this.buttonConfiguration = this.buttonConfiguration.map((item, index) => {
+                return {
+                    ...item,
+                    isActive: this.activeButtonIndex === index,
+                    index: index
+                }
+            });
+        }
+
+        init() {
+            console.log("init called");
+            console.log("this.activeButtonIndex:", this.activeButtonIndex);
+            console.log("this.buttonConfiguration:", this.buttonConfiguration);
+
+            if (this.activeButtonIndex) {
+                this.setActiveButton(this.activeButtonIndex);
+            }
+            if (this.buttonConfiguration) {
+                this.resetButtons();
+            }
+
+            this.initialize = "true";
+        }
+
+        connectedCallback() {
+            super.connectedCallback();
+            let self = this;
+
+            // Attach Callback for Listening to Button Clicks
+            document.addEventListener("navigation-button-click", (event) => {
+                console.log("event.detail:", event.detail);
+                let { key } = event.detail;
+
+                // Reset all isActive flags
+                self.setActiveButton(Number(key));
+
+                console.log("self.buttonConfiguration:", self.buttonConfiguration);
+
+                // Request an update explicitly
+                self.requestUpdate();
+            });
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+            console.log({ name, oldValue, newValue });
+
+            if (name === 'button-configuration') {
+                this.buttonConfiguration = JSON.parse(newValue);
+                this.resetButtons();
+                console.log("After resetButtons:", this.buttonConfiguration);
+            } else if (name === 'active-button-index') {
+                this.activeButtonIndex = Number(newValue);
+                // Reset all isActive flags
+                this.setActiveButton(this.activeButtonIndex);
+            }
+            super.attributeChangedCallback(name, oldValue, newValue);
+        }
+
+        setActiveButton(index) {
+            this.activeButtonIndex = index;
+            this.buttonConfiguration = this.buttonConfiguration.map((item, mapIndex) => {
+                return {
+                    ...item,
+                    isActive: mapIndex === index
+                }
+            });
+        }
+
+        subArray(arr, fromIndex, count, clockwise = true) {
+            let n = arr.length;
+            let newArr = new Array(count);
+
+            if (!clockwise) {
+                // Clockwise
+                for (let i = (fromIndex - 1 + n) % n; count != 0; i = (i - 1 + n) % n) {
+                    newArr[count - 1] = arr[i];
+                    count--;
+                }
+            } else {
+                // Anti-Clockwise
+                for (let i = (fromIndex + 1) % n; count != 0; i = (i + 1) % n) {
+                    newArr[newArr.length - count] = arr[i];
+                    count--;
+                }
+            }
+
+            return newArr.filter((item, index) => item !== undefined);
+        }
+
+        shiftedArray(arr, activeIndex) {
+            let n = arr.length;
+            let mid = Math.floor(n / 2);
+
+            let totalElementsRight = n - mid - 1;
+            let totalElementsLeft = mid;
+
+            return [
+                ...this.subArray(arr, activeIndex, totalElementsLeft, false),
+                arr[activeIndex],
+                ...this.subArray(arr, activeIndex, totalElementsRight, true)
+            ];
+        }
+
+        getButtons() {
+            return this.shiftedArray(this.buttonConfiguration, this.activeButtonIndex);
+        }
+
+        render() {
+            console.log("render() was called")
+
+            if (this.initialize === "false") {
+                return html``;
+            }
+
+            const buttons = this.getButtons();
+            console.log("buttons:", buttons);
+
+            let activeButton = this.buttonConfiguration[this.activeButtonIndex];
+
+            return html`
+                    <div class="column">
+                        <div class="tab-container">
+                                ${buttons.map((item, index) => {
+                console.log("item:", item);
+                console.log("item.isActive:", (item.isActive ? "active" : ""));
+                return html`
+                                                <navigation-button key="${item.index}" name="${item.title}" ?active="${item.isActive}">
+                                                    ${unsafeHTML(item.svgIcon)}
+                                                    <div slot="title">${item.title}</div>
+                                                </navigation-button>
+                                            `;
+            })}
+                        </div>
+                        <div class="tab-content-container">
+                                    <tab-content id="tab-content" primary-image-url="${activeButton.primaryImageUrl}"
+                                    secondary-image-url="${activeButton.secondaryImageUrl}" tab-title="${activeButton.title}"></tab-navigation>
+                        </div>
+                        <div>
+                            <div class="background-svg-mobile"></div>
+                            <svg class="background-svg-left" xmlns="http://www.w3.org/2000/svg" width="1160" height="1051" viewBox="0 0 1014 919" fill="none"><g opacity="0.4" filter="url(#filter0_f_801_83213)"><path d="M133.838 591.958C168.415 371.71 14.2491 161.699 250.901 166.77C510.136 172.326 580.695 26.9879 796.336 204.508C983.128 358.28 894.404 604.408 680.657 690.087C555.188 740.381 361.656 787.841 340.798 792.897C339.501 793.211 338.476 793.491 337.19 793.845C315.024 799.951 92.5442 854.992 133.838 591.958Z" fill="url(#paint0_linear_801_83213)"></path></g><defs><filter id="filter0_f_801_83213" x="0.451286" y="0.451286" width="1013.28" height="917.811" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="57.7744" result="effect1_foregroundBlur_801_83213"></feGaussianBlur></filter><linearGradient id="paint0_linear_801_83213" x1="73" y1="326.5" x2="526.5" y2="191.5" gradientUnits="userSpaceOnUse"><stop stop-color="#12D0FA"></stop><stop offset="0.34375" stop-color="#7612FA"></stop></linearGradient></defs></svg>
+                            <svg class="background-svg-right" xmlns="http://www.w3.org/2000/svg" width="1180" height="1071" viewBox="0 0 1032 937" fill="none"><g opacity="0.4" filter="url(#filter0_f_801_83212)"><path d="M196.945 660.341C412.121 473.409 43.3074 244.198 326.62 249.187C636.967 254.652 843.101 -39.2324 904 229.288C962.579 487.581 774.491 145.828 866 524.5C970.647 957.539 389.71 798.846 269.923 761.904C255.854 757.565 241.121 757.62 226.933 761.553C169.188 777.559 27.3532 807.673 196.945 660.341Z" fill="url(#paint0_linear_801_83212)" fill-opacity="0.8"></path></g><defs><filter id="filter0_f_801_83212" x="0.816521" y="0.466423" width="1030.28" height="935.821" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="57.7744" result="effect1_foregroundBlur_801_83212"></feGaussianBlur></filter><linearGradient id="paint0_linear_801_83212" x1="641.5" y1="139" x2="812.5" y2="693" gradientUnits="userSpaceOnUse"><stop stop-color="#FA12E3"></stop><stop offset="1" stop-color="#FFD700"></stop></linearGradient></defs></svg>
+                        </div>
+                        <div class="tab-decoration"></div>
+                    </div>
+        `;
+        }
+    }
+
+    customElements.define('tab-navigation', TabNavigation);
+</script>
+
+<script id="initialize">
+    function preload() {
+        let images = [];
+        for (let i = 0; i < arguments.length; i++) {
+            images[i] = new Image();
+            images[i].src = arguments[i];
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        let featureNavigationEl = document.querySelector("#feature-navigation");
+        let properties = {
+            buttonConfiguration: [
+                {
+                    "title": "Website Builder",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' width='32' height='32' fill='none' version='1.1' viewBox='-2.4 -2.4 20 20' xmlns='http://www.w3.org/2000/svg'><g transform='translate(-4.4,-4.4)' stroke='#7F76B3' stroke-width='2'><path d='M 3,8.976 C 3,4.05476 4.05476,3 8.976,3 h 6.048 C 19.9452,3 21,4.05476 21,8.976 v 6.048 C 21,19.9452 19.9452,21 15.024,21 H 8.976 C 4.05476,21 3,19.9452 3,15.024 Z'/><path d='m21 9h-18' stroke-linecap='round' stroke-linejoin='round'/><path d='m9 21v-12' stroke-linecap='round' stroke-linejoin='round'/></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d62477ef14d012407f.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Unified Inbox",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 id=svg3 version=1.1 viewBox='0 0 21.5 21.499876'width=32 xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs3 /><g id=SVGRepo_bgCarrier transform=translate(-0.0514616,-0.0514616) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(-0.0514616,-0.0514616) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-1.25,-1.25)><path d='M 14,7.07026 C 12.8233,6.38958 11.4571,6 10,6 5.58172,6 2,9.58172 2,14 c 0,1.2797 0.30049,2.4893 0.83477,3.562 0.14198,0.285 0.18924,0.6109 0.10692,0.9185 l -0.47648,1.7808 c -0.20685,0.7731 0.5004,1.4803 1.27347,1.2735 L 5.51951,21.0583 C 5.82715,20.976 6.15297,21.0233 6.43802,21.1652 7.51069,21.6995 8.72025,22 10,22 c 4.4183,0 8,-3.5817 8,-8 0,-1.4571 -0.3896,-2.8233 -1.0703,-4'id=path1 stroke=#7F76B3 stroke-linecap=round stroke-width=1.5 /><path d='m 18,14.5018 c 0.0665,-0.0277 0.1324,-0.0565 0.1977,-0.0863 0.3621,-0.1654 0.7684,-0.2273 1.1529,-0.1244 l 0.4761,0.1274 C 20.793,14.677 21.677,13.793 21.4185,12.8267 L 21.2911,12.3506 C 21.1882,11.9661 21.2501,11.5598 21.4155,11.1977 21.7908,10.376 22,9.46242 22,8.5 22,7.22592 21.6334,6.03745 21,5.03431 M 9.5,5.9956 C 10.4806,3.64899 12.7977,2 15.5,2 16.7886,2 17.9897,2.375 19,3.02182'id=path2 stroke=#7F76B3 stroke-linecap=round stroke-width=1.5 /><path d='m 6.51828,14 h 0.009 m 3.48172,0 h 0.009 m 3.482,0 h 0.009'id=path3 stroke=#7F76B3 stroke-linecap=round stroke-width=2 stroke-linejoin=round /></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d617c7b54fd7995206.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Reputation Manager",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 viewBox='0 0 60 60'width=60 xmlns=http://www.w3.org/2000/svg><path clip-rule=evenodd d='M40.9022 4.03313C40.31 1.98896 37.1889 1.98896 36.5967 4.03313L35.7584 6.92856C33.9502 13.167 31.4793 18.0401 24.7657 19.7199L21.6501 20.4996C19.45 21.0499 19.45 23.9501 21.6501 24.5004L24.7657 25.2801C31.4793 26.9599 33.9502 31.8329 35.7584 38.0714L36.5967 40.9669C37.1889 43.011 40.31 43.011 40.9022 40.9669L41.7416 38.0714C43.5487 31.8329 46.0207 26.9599 52.7342 25.2801L55.8499 24.5004C58.05 23.9501 58.05 21.0499 55.8499 20.4996C53.6498 19.9493 52.7342 19.7199 52.7342 19.7199C46.0207 18.0401 43.5487 13.167 41.7416 6.92856L40.9022 4.03313Z'fill-rule=evenodd stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=4 fill=#24223E fill-opacity=0.1></path><path clip-rule=evenodd d='M15.0413 33.4582C14.686 32.1806 12.8133 32.1806 12.458 33.4582L11.9551 35.2679C10.8701 39.1669 9.3876 42.2126 5.35945 43.2624L3.49005 43.7497C2.16998 44.0937 2.16998 45.9063 3.49005 46.2503L5.35945 46.7376C9.3876 47.7874 10.8701 50.8331 11.9551 54.7321L12.458 56.5418C12.8133 57.8194 14.686 57.8194 15.0413 56.5418L15.5449 54.7321C16.6292 50.8331 18.1124 47.7874 22.1405 46.7376L24.0099 46.2503C25.33 45.9063 25.33 44.0937 24.0099 43.7497C22.6899 43.4058 22.1405 43.2624 22.1405 43.2624C18.1124 42.2126 16.6292 39.1669 15.5449 35.2679L15.0413 33.4582Z'fill-rule=evenodd stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=4></path></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d668c99f355314b902.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Call Recording",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 id=b stroke=#7F76B3 stroke-width=4.08 version=1.1 viewBox='0 0 33.3328 45.08'width=32 xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs2 /><g id=SVGRepo_bgCarrier transform=translate(-0.08390454,-0.11529844) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(-0.08390454,-0.11529844) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-7.3336,-1.46)><defs id=defs1><style id=style1>.i{fill:none;stroke:#7F76B3;stroke-linecap:round;stroke-linejoin:round}</style></defs><g id=c><line class=i id=d x1=23.819901 x2=23.819901 y1=3.5 y2=44.5 /><line class=i id=e x1=16.589899 x2=16.589899 y1=11.9828 y2=36.0172 /><line class=i id=f x1=9.3736 x2=9.3736 y1=19.758699 y2=28.241301 /><line class=i id=g x1=31.0986 x2=31.0986 y1=11.9828 y2=36.0172 /><line class=i id=h x1=38.6264 x2=38.6264 y1=19.758699 y2=28.241301 /></g></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d6fe542b33165346b4.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Calendar",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=27 viewBox='0 0 29 27'width=29 xmlns=http://www.w3.org/2000/svg><path d='M22 21C20.7195 21 19.671 21.0221 18.8443 21.0512C17.2961 21.1059 16 21.9509 16 23.5C16 25.0512 17.2928 25.8998 18.8432 25.9522C19.6551 25.9797 20.6964 26 22 26C23.3036 26 24.3449 25.9797 25.1568 25.9522C26.7072 25.8998 28 25.0512 28 23.5C28 21.9509 26.7039 21.1059 25.1557 21.0512C24.329 21.0221 23.2805 21 22 21Z'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M24 13.5C24 13.4682 23.9998 13.4368 23.9994 13.4058C23.9782 11.827 22.4482 11.1372 20.87 11.0878C19.4277 11.0427 17.3189 11 14.5 11C11.6811 11 9.57227 11.0427 8.12997 11.0878C6.55177 11.1372 5.02182 11.827 5.00063 13.4058C5.00021 13.4368 5 13.4682 5 13.5C5 13.5503 5.00053 13.5996 5.00156 13.6479C5.03455 15.1918 6.53082 15.8666 8.0743 15.915C9.47923 15.9591 11.5719 16 14.5 16C17.4281 16 19.5208 15.9591 20.9257 15.915C22.4692 15.8666 23.9655 15.1918 23.9984 13.6479C23.9995 13.5996 24 13.5503 24 13.5Z'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M7 1C5.71951 1 4.67101 1.02207 3.84427 1.05125C2.29613 1.1059 1 1.9509 1 3.5C1 5.05124 2.29279 5.89983 3.84315 5.95223C4.65505 5.97967 5.69645 6 7 6C8.30355 6 9.34495 5.97967 10.1568 5.95223C11.7072 5.89983 13 5.05124 13 3.5C13 1.9509 11.7039 1.1059 10.1557 1.05125C9.32899 1.02207 8.28049 1 7 1Z'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d68b33b0fdf1184560.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Contact Manager",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 viewBox='0 0 27 32'width=27 xmlns=http://www.w3.org/2000/svg><path d='M13.3473 30.7286C10.8782 30.7286 8.89195 30.6115 7.33302 30.4526C4.3617 30.1496 2.27568 27.8491 2.03183 24.8723C1.85742 22.7432 1.71436 19.8237 1.71436 15.9747C1.71436 12.1257 1.85742 9.20615 2.03183 7.07705C2.27568 4.10029 4.3617 1.79977 7.33302 1.49677C8.89195 1.3378 10.8783 1.2207 13.3473 1.2207C15.7764 1.2207 17.7949 1.33405 19.4198 1.4891C22.6642 1.79869 24.9983 4.33323 25.2509 7.58262C25.4158 9.70402 25.5477 12.49 25.5477 15.9747C25.5477 17.3111 25.5283 18.5448 25.4951 19.6776C22.7294 22.0071 19.3898 22.0357 17.651 21.8475C17.1374 21.7919 16.6472 22.3099 16.722 22.821C16.9705 24.5202 17.002 27.7874 14.4615 30.7205C14.1002 30.7258 13.7288 30.7286 13.3473 30.7286Z'fill=#7F76B3 fill-opacity=0.1 clip-rule=evenodd fill-rule=evenodd></path><path d='M7.80266 30.4984C9.28506 30.6338 11.1198 30.7291 13.3475 30.7291C15.5241 30.7291 17.371 30.6381 18.9005 30.5077C22.4691 30.2032 25.0347 27.4205 25.2898 23.848C25.4361 21.7979 25.5479 19.1825 25.5479 15.9752C25.5479 12.7678 25.4361 10.1524 25.2898 8.10227C25.0347 4.52984 22.4691 1.74708 18.9005 1.44267C17.371 1.3122 15.5241 1.22119 13.3475 1.22119C11.1198 1.22119 9.28507 1.31652 7.80267 1.45191C4.53415 1.75045 2.24207 4.27504 1.995 7.54785C1.8378 9.63016 1.71452 12.4022 1.71452 15.9752C1.71452 19.5481 1.8378 22.3202 1.995 24.4025C2.24207 27.6753 4.53414 30.1999 7.80266 30.4984Z'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2 fill=#7F76B3 fill-opacity=0.1></path><path d='M25.2642 19.3804C22.0256 22.9027 19.5444 19.4255 17.036 21.9339C14.5276 24.4424 18.0047 26.9236 14.1987 30.4458'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M7.95654 8.03125H19.3057'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M7.95654 13.7061H15.3335'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d6a530e5c203fe15d6.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Invoicing",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=34 viewBox='0 0 33 34'width=33 xmlns=http://www.w3.org/2000/svg><path d='M14.147 4.57874L14.147 19.9002L24.645 28.6958C24.645 28.6958 32.3057 21.0685 27.766 12.5232C22.9426 3.44382 14.147 4.57874 14.147 4.57874Z'fill=#7F76B3 fill-opacity=0.1></path><path d='M1.09521 18.4819C1.09521 10.8036 7.3197 4.5791 14.998 4.5791C22.6763 4.5791 28.9008 10.8036 28.9008 18.4819C28.9008 26.1602 22.6763 32.3847 14.998 32.3847C7.3197 32.3847 1.09521 26.1602 1.09521 18.4819Z'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2 fill=#7F76B3 fill-opacity=0.1></path><path d='M14.147 19.8975L18.1192 23.3022'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M14.147 19.8975V11.3856'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M23.2262 2.87581C23.2262 2.87581 27.3673 2.47715 29.1846 4.29445C31.0019 6.11176 30.6033 10.2528 30.6033 10.2528'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d65f2569013831bf67.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Email Marketing",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 id=Icons version=1.1 viewBox='0 0 28 27.999939'width=32 xml:space=preserve xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs2 /><g id=SVGRepo_bgCarrier transform=translate(-0.0121803,-0.05121888) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(-0.0121803,-0.05121888) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-2,-2.0000618)><style id=style1>.st0{fill:none;stroke:#7F76B3;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10}.st1{fill:none;stroke:#7F76B3;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.st2{fill:none;stroke:#7F76B3;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5.2066,0}</style><path class=st0 d='m 21,11 h 6 c 1.1,0 2,0.9 2,2 v 14 c 0,1.1 -0.9,2 -2,2 H 5 C 3.9,29 3,28.1 3,27 V 13 c 0,-1.1 0.9,-2 2,-2 h 6'id=path1 /><polyline class=st0 id=polyline1 points='8,16 16,23 24,16 '/><line class=st0 id=line1 x1=12.6 x2=8 y1=20 y2=24 /><line class=st0 id=line2 x1=24 x2=19.4 y1=24 y2=20 /><path class=st0 d='m 12.5,5.6 v 0 C 11.1,5.6 10,6.8 10,8.2 v 0 c 0,1.4 1.1,2.6 2.5,2.6 v 0 c 2.2,0 4.4,0.5 6.4,1.5 l 2,1 V 7.5 3 l -2,1 C 17,5 14.8,5.6 12.5,5.6 Z'id=path2 /><polyline class=st0 id=polyline2 points='11,10.2 13.4,15 15.9,15 15.9,5.6 '/></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d668c99f066314b903.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Payment Manager",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' data-name='Layer 1'fill=none height=32px id=Layer_1 viewBox='0 0 24 24'width=32px xmlns=http://www.w3.org/2000/svg><g id=SVGRepo_bgCarrier stroke-width=0 /><g id=SVGRepo_tracerCarrier stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier><defs><style>.cls-1{fill:none;stroke:#7f76b3;stroke-miterlimit:10;stroke-width:2}</style></defs><path class=cls-1 d=M9.14,16.77h3.34a1.43,1.43,0,0,0,1.43-1.43h0a1.43,1.43,0,0,0-1.43-1.43h-1a1.43,1.43,0,0,1-1.43-1.43h0a1.43,1.43,0,0,1,1.43-1.43h3.34 /><line class=cls-1 x1=12 x2=12 y1=9.14 y2=11.05 /><line class=cls-1 x1=12 x2=12 y1=16.77 y2=18.68 /><polyline class=cls-1 points='15.82 2.46 15.82 2.46 20.59 2.46 20.59 22.5 3.41 22.5 3.41 2.46 8.18 2.46 8.18 2.46'/><path class=cls-1 d=M15.82,1.5V3.41a1.92,1.92,0,0,1-1.91,1.91H10.09A1.92,1.92,0,0,1,8.18,3.41V1.5Z /></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d6601e5828d4b5eefb.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Conversion Pipeline",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 id=svg1 version=1.1 viewBox='0 0 18 18.499919'width=32 xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs1 /><g id=SVGRepo_bgCarrier transform=translate(-0.047503,-0.047503) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(-0.047503,-0.047503) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-3,-3)><path d='M 20,4 H 4 v 2 l 6,6 v 8.5 L 14,18 v -6 l 6,-6 z'id=path1 stroke=#7F76B3 stroke-linejoin=round stroke-width=2 /></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d6601e585c95b5eefc.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Reporting",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 id=svg2 version=1.1 viewBox='0 0 21.500021 21.500021'width=32 xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs2 /><g id=SVGRepo_bgCarrier transform=translate(-0.05145139,-0.05145139) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(-0.05145139,-0.05145139) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-1.2499898,-1.2499898)><path d='m 7,14 2.29289,-2.2929 c 0.39053,-0.3905 1.02371,-0.3905 1.41421,0 l 1.5858,1.5858 c 0.3905,0.3905 1.0237,0.3905 1.4142,0 L 17,10 m 0,0 v 2.5 M 17,10 h -2.5'id=path1 stroke=#7F76B3 stroke-linecap=round stroke-width=2 stroke-linejoin=round /><path d='m 22,12 c 0,4.714 0,7.0711 -1.4645,8.5355 C 19.0711,22 16.714,22 12,22 7.28595,22 4.92893,22 3.46447,20.5355 2,19.0711 2,16.714 2,12 2,7.28595 2,4.92893 3.46447,3.46447 4.92893,2 7.28595,2 12,2 16.714,2 19.0711,2 20.5355,3.46447 21.5093,4.43821 21.8356,5.80655 21.9449,8'id=path2 stroke=#7F76B3 stroke-linecap=round stroke-width=1.5 /></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d685cf9c361f39014a.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Social Media Planner",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 id=svg5 version=1.1 viewBox='0 0 40.070869 39.999999'width=32 xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs5 /><g id=SVGRepo_bgCarrier transform=translate(-0.1058559,-0.0828258) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(-0.1058559,-0.0828258) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-3.9645648,-4)><defs id=defs1><style id=style1>.a{fill:none;stroke:#7F76B3;stroke-linecap:round;stroke-linejoin:round; stroke-width: 2;}</style></defs><path class=a d='M 10.2114,37.7886 A 19.5,19.5 0 0 1 24,4.5'id=path1 /><path class=a d='M 37.7886,10.2114 A 19.5,19.5 0 0 1 24,43.5'id=path2 /><circle class=a cx=34.8041 cy=8.9797001 id=circle2 r=3.1622 /><circle class=a cx=13.1959 cy=39.020302 id=circle3 r=3.1622 /><path class=a d='M 19.872,20.2987 23.0345,26.6235 33.575,25.57 27.2507,12.9208 Z'id=path3 /><path class=a d='m 19.872,20.2987 -4.2162,2.1081 c -1.267,0.6335 -1.16,2.95 -0.5267,4.2167 0.6333,1.2667 2.4224,2.7416 3.6892,2.1081 l 4.2162,-2.1081'id=path4 /><path class=a d='m 22.1027,27.1622 2.6351,5.27 -2.1078,1.0543 -2.6351,-5.27'id=path5 /></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d63a900a8ad1cbdf3c.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Surveys and Forms",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=#000000 height=32px viewBox='0 0 24 24'width=32px xmlns=http://www.w3.org/2000/svg><g id=SVGRepo_bgCarrier stroke-width=0 /><g id=SVGRepo_tracerCarrier stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier><path stroke='#7F76B3' d='M19 21H5V5h2v2h10V5h2v2.172l1-1V4h-3V3h-3a2 2 0 0 0-4 0H7v1H4v18h16V11.828l-1 1zM8 4h3V2.615A.615.615 0 0 1 11.614 2h.771a.615.615 0 0 1 .615.615V4h3v2H8zm14.646 1.646l.707.707-8.853 8.854-3.854-3.854.707-.707 3.147 3.147z'/></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d62477ef73a4124080.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Automate Workflow",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=34 id=Layer_1 version=1.1 viewBox='0 0 31.72106 32.220001'width=32 xml:space=preserve xmlns=http://www.w3.org/2000/svg xmlns:svg=http://www.w3.org/2000/svg><defs id=defs1 /><g id=SVGRepo_bgCarrier transform=translate(0.40723508,0.40723508) stroke-width=0 /><g id=SVGRepo_tracerCarrier transform=translate(0.40723508,0.40723508) stroke-linecap=round stroke-linejoin=round /><g id=SVGRepo_iconCarrier transform=translate(-0.10258222,0.08450669)><path d='m 17.38,23.36 h -2.76 c -0.199,0 -0.36,-0.161 -0.36,-0.36 V 21.433 L 13.391,21.07 12.28,22.181 c -0.067,0.067 -0.159,0.105 -0.254,0.105 v 0 c -0.096,0 -0.187,-0.038 -0.254,-0.105 L 9.82,20.229 c -0.141,-0.141 -0.141,-0.369 0,-0.51 l 1.108,-1.107 -0.357,-0.871 H 9 c -0.199,0 -0.36,-0.161 -0.36,-0.36 v -2.76 c 0,-0.199 0.161,-0.36 0.36,-0.36 h 1.567 L 10.93,13.392 9.82,12.28 c -0.14,-0.141 -0.14,-0.368 0,-0.509 l 1.951,-1.952 c 0.135,-0.136 0.374,-0.136 0.509,0 l 1.108,1.109 0.872,-0.357 V 9 c 0,-0.199 0.161,-0.36 0.36,-0.36 h 2.76 c 0.199,0 0.36,0.161 0.36,0.36 v 1.567 l 0.868,0.363 1.11,-1.111 c 0.135,-0.135 0.375,-0.136 0.51,0 l 1.952,1.952 c 0.067,0.067 0.105,0.159 0.105,0.254 0,0.096 -0.038,0.187 -0.105,0.254 l -1.109,1.108 0.357,0.872 H 23 c 0.199,0 0.36,0.161 0.36,0.36 v 2.76 c 0,0.199 -0.161,0.36 -0.36,0.36 h -1.567 l -0.363,0.868 1.111,1.11 c 0.067,0.067 0.105,0.159 0.105,0.255 0,0.096 -0.038,0.188 -0.105,0.255 l -1.952,1.952 c -0.067,0.067 -0.159,0.105 -0.255,0.105 v 0 c -0.096,0 -0.188,-0.038 -0.255,-0.105 L 18.612,21.07 17.741,21.427 V 23 c -0.001,0.199 -0.162,0.36 -0.361,0.36 z m -2.4,-0.72 h 2.04 v -1.452 c 0,-0.146 0.089,-0.277 0.224,-0.333 l 1.316,-0.54 c 0.134,-0.057 0.288,-0.024 0.392,0.078 l 1.022,1.024 1.443,-1.443 -1.028,-1.026 c -0.103,-0.104 -0.134,-0.259 -0.077,-0.394 l 0.55,-1.312 c 0.056,-0.134 0.187,-0.222 0.332,-0.222 h 1.446 v -2.04 h -1.452 c -0.146,0 -0.277,-0.088 -0.333,-0.223 l -0.54,-1.316 C 20.26,13.307 20.291,13.152 20.393,13.05 l 1.024,-1.023 -1.443,-1.443 -1.026,1.027 c -0.104,0.103 -0.259,0.135 -0.394,0.078 L 17.242,11.14 C 17.108,11.084 17.02,10.953 17.02,10.808 V 9.36 h -2.04 v 1.452 c 0,0.146 -0.088,0.278 -0.223,0.333 l -1.316,0.54 c -0.135,0.054 -0.288,0.024 -0.391,-0.079 l -1.023,-1.023 -1.442,1.443 1.027,1.028 c 0.103,0.103 0.134,0.259 0.077,0.394 L 11.14,14.76 c -0.056,0.134 -0.187,0.221 -0.332,0.221 H 9.36 v 2.04 h 1.452 c 0.146,0 0.278,0.089 0.333,0.224 l 0.54,1.316 c 0.055,0.135 0.024,0.289 -0.079,0.392 l -1.022,1.022 1.442,1.443 1.028,-1.028 c 0.104,-0.104 0.259,-0.133 0.394,-0.077 l 1.312,0.55 c 0.134,0.056 0.221,0.187 0.221,0.332 z M 16,19.36 c -1.853,0 -3.36,-1.508 -3.36,-3.36 0,-1.852 1.507,-3.36 3.36,-3.36 1.853,0 3.36,1.507 3.36,3.36 0,1.853 -1.507,3.36 -3.36,3.36 z m 0,-6 c -1.456,0 -2.64,1.185 -2.64,2.64 0,1.456 1.185,2.64 2.64,2.64 1.456,0 2.64,-1.184 2.64,-2.64 0,-1.456 -1.184,-2.64 -2.64,-2.64 z m 0,18 c -4.529,0 -8.716,-1.933 -11.64,-5.338 V 30 H 3.64 V 24.64 H 9 v 0.721 H 4.743 C 7.536,28.725 11.598,30.64 16,30.64 24.072,30.64 30.64,24.073 30.64,16 h 0.721 C 31.36,24.47 24.47,31.36 16,31.36 Z M 1.36,16 H 0.64 C 0.64,7.53 7.53,0.64 16,0.64 c 4.529,0 8.716,1.933 11.64,5.337 V 2 h 0.721 V 7.36 H 23 V 6.64 h 4.257 C 24.464,3.275 20.401,1.36 16,1.36 7.927,1.36 1.36,7.927 1.36,16 Z'id=process_1_ stroke=#7f76b3 /></g></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d6a530e54626fe15d5.png",
+                    "secondaryImageUrl": ""
+                },
+                {
+                    "title": "Chat",
+                    "svgIcon": "<svg class='svg-icon' slot='svg-icon' fill=none height=32 viewBox='0 0 32 32'width=32 xmlns=http://www.w3.org/2000/svg><path d='M15.8492 25.435C23.9976 25.435 30.6031 20.0146 30.6031 13.3281C30.6031 6.64164 23.9976 1.22119 15.8492 1.22119C7.70079 1.22119 1.09521 6.64164 1.09521 13.3281C1.09521 16.4289 2.51579 19.2574 4.85203 21.3994C7.18828 23.5413 5.35117 30.7291 5.35117 30.7291L8.44736 27.8657C10.4359 26.0267 13.1406 25.435 15.8492 25.435Z'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2 fill=#7F76B3 fill-opacity=0.1></path><path d='M10.1748 15.9771L16.9843 15.9771'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M10.1748 10.8687L22.0915 10.8687'stroke=#7F76B3 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                    "primaryImageUrl": "https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669e68d65f2569174831bf68.png",
+                    "secondaryImageUrl": ""
+                }
+            ],
+            activeButtonIndex: 0,
+        };
+
+        for (let i = 0; i < properties.buttonConfiguration.length; i++) {
+            let item = properties.buttonConfiguration[i];
+            preload(item.primaryImageUrl, item.secondaryImageUrl);
+        }
+
+        Object.assign(featureNavigationEl, properties);
+        featureNavigationEl.init();
+    });
+</script>
