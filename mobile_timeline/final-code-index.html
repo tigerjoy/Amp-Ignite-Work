@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    /* * {
+        outline: 1px solid limegreen;
+    } */
+
+    .vertical-timeline {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .vertical-line {
+        width: clamp(8px, 4vw, 14px);
+        height: clamp(507px, 76vh, 563px);
+        background: linear-gradient(0deg, #6B57FF 0%, #B72AEA 100%);
+    }
+
+    .timeline-items-container {
+        display: flex;
+        height: clamp(500px, 76vh, 563px);
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 7;
+        position: absolute;
+    }
+
+    .timeline-item {
+        width: clamp(75px, 28vw, 100px);
+        height: clamp(75px, 28vw, 100px);
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .timeline-item .step-number {
+        color: white;
+        font-size: 32px;
+        font-family: Montserrat;
+        font-weight: 600;
+        word-wrap: break-word
+
+    }
+
+    .timeline-item:nth-of-type(1) {
+        background: #6B57FF;
+    }
+
+    .timeline-item:nth-of-type(2) {
+        background: linear-gradient(90deg, #6B57FF 0%, #B72AEA 100%);
+    }
+
+    .timeline-item:nth-of-type(3) {
+        background: linear-gradient(90deg, #6B57FF 0%, #B72AEA 100%);
+    }
+
+    .timeline-item:nth-of-type(4) {
+        background: #B72AEA;
+    }
+
+    .timeline-content {
+        position: absolute;
+        width: fit-content;
+        height: fit-content;
+        width: clamp(100%, 125%, 150%);
+        z-index: 10;
+    }
+
+    .timeline-item:nth-of-type(1) .timeline-content,
+    .timeline-item:nth-of-type(3) .timeline-content{
+        left: -130%;
+        text-align: left;
+    }
+
+    .timeline-item:nth-of-type(3) .timeline-content {
+        left: -134%;
+    }
+
+    .timeline-item:nth-of-type(2) .timeline-content,
+    .timeline-item:nth-of-type(4) .timeline-content {
+        right: clamp(-125px, -35vw, -137%);
+        text-align: right;
+    }
+
+    .timeline-content .heading {
+        color: #6B57FF;
+        font-size: 25px;
+        font-family: Montserrat;
+        font-weight: 600;
+        word-wrap: normal
+    }
+
+    .timeline-content .description {
+        color: black;
+        font-size: 18px;
+        font-family: Montserrat;
+        font-weight: 400;
+        word-wrap: break-word;
+    }
+</style>
+</head>
+
+<body>
+<div class="vertical-timeline">
+    <div class="vertical-line"></div>
+    <div class="timeline-items-container">
+        <div class="timeline-item">
+            <div class="step-number">1</div>
+            <div class="timeline-content">
+                <div class="description">Get instant access to software</div>
+                <div class="heading">Day 1:</div>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="step-number">2</div>
+            <div class="timeline-content">
+                <div class="description">You will get an email reminder that your free trial is expiring</div>
+                <div class="heading">Day 13:</div>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="step-number">3</div>
+            <div class="timeline-content">
+                <div class="description">Simple and easy walkthrough</div>
+                <div class="heading">Onboarding Process</div>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="step-number">4</div>
+            <div class="timeline-content">
+                <div class="description">You will be charged $297 using the credit card you enter</div>
+                <div class="heading">Day 14:</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

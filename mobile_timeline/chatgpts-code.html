@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Timeline</title>
+    <style>
+        .timeline-container {
+            position: relative;
+            width: 100%;
+            padding-left: 120px; /* Adjust padding to make space for the vertical line */
+        }
+        .vertical-line {
+            position: absolute;
+            width: 10px;
+            background: linear-gradient(180deg, #6B57FF 0%, #B72AEA 100%);
+            top: 0;
+            bottom: 0;
+            left: 50px; /* Position of the vertical line */
+        }
+        .timeline-item {
+            position: absolute;
+            width: 100%;
+            left: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .timeline-item div:first-child {
+            width: 100px;
+            height: 100px;
+            background: #6B57FF;
+            border-radius: 50%;
+            color: white;
+            font-size: 32px;
+            font-family: Montserrat;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .timeline-item .description {
+            margin-top: 10px;
+            color: black;
+            font-size: 18px;
+            font-family: Montserrat;
+            font-weight: 400;
+        }
+        .timeline-item .day {
+            font-size: 32px;
+            font-family: Montserrat;
+            font-weight: 600;
+            color: #6B57FF;
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline-container">
+        <!-- Vertical Line -->
+        <div class="vertical-line"></div>
+
+        <!-- Timeline Items -->
+        <div class="timeline-item" style="top: 20px;">
+            <div>1</div>
+            <div class="description">Get instant access to software</div>
+            <div class="day">Day 1:</div>
+        </div>
+
+        <div class="timeline-item" style="top: 150px;">
+            <div style="background: linear-gradient(180deg, #6B57FF 0%, #B72AEA 100%);">2</div>
+            <div class="description">You will get an email reminder that your free trial is expiring</div>
+            <div class="day">Day 13:</div>
+        </div>
+
+        <div class="timeline-item" style="top: 280px;">
+            <div style="background: linear-gradient(180deg, #6B57FF 0%, #B72AEA 100%);">3</div>
+            <div class="description">Simple and easy walkthrough</div>
+            <div class="day">Onboarding Process</div>
+        </div>
+
+        <div class="timeline-item" style="top: 410px;">
+            <div style="background: #B72AEA;">4</div>
+            <div class="description">You will be charged $297 using the credit card you enter</div>
+            <div class="day">Day 14:</div>
+        </div>
+    </div>
+</body>
+</html>

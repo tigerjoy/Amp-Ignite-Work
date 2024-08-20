@@ -1,0 +1,959 @@
+<team-carousel id="team-carousel"></team-carousel>
+
+<script type="module" id="tab-button">
+    import { LitElement, html, css } from 'https://cdn.jsdelivr.net/gh/lit/dist@3.1.4/all/lit-all.min.js';
+
+    export class TabButton extends LitElement {
+        static properties = {
+            active: { type: Boolean },
+            name: { type: String },
+            key: { type: String }
+        };
+
+        static styles = css`
+    * {
+      box-sizing: border-box;
+    }
+
+    button {
+        font: inherit;
+    }
+
+    .tab-navigation-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        inline-size: 160px;
+        block-size: 120px;
+        border: 1px solid #ececfc;
+        border-radius: 14px;
+        color: #514b81;
+        background-color: transparent;
+        font-weight: 500;
+        line-height: 25px;
+        cursor: pointer;
+        transition: var(--button-transition, var(--transition-short, 0.25s var(--easing-natural, cubic-bezier(0.5, 0, 0.5, 1))));
+        transform: translateY(0);
+    }
+
+    .tab-navigation-button:after {
+        content: "";
+        position: absolute;
+        inset-inline-start: 50%;
+        inset-block-start: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        border-radius: 14px;
+        background-color: rgb(var(--color-white, 255, 255, 255));
+        z-index: -1;
+    }
+
+    .tab-navigation-button:active,
+    .tab-navigation-button:hover {
+        transform: translateY(1px);
+    }
+
+    .tab-navigation-button-active {
+        position: relative;
+        border: 1px solid #cfcfeb;
+        color: rgb(var(--color-black, var(--color-grey-0, 41, 45, 52)));
+        background-color: rgb(var(--color-white, 255, 255, 255));
+        font-weight: 700;
+    }
+
+    .tab-navigation-button-active:before {
+        content: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjg0IiBoZWlnaHQ9IjE5MSIgdmlld0JveD0iMCAwIDI4NCAxOTEiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIG9wYWNpdHk9IjAuMyIgZmlsdGVyPSJ1cmwoI2ZpbHRlcjBfZl8yOTZfNDQ1MjUpIj4KPHJlY3QgeD0iNTAiIHk9IjUwIiB3aWR0aD0iMTg0IiBoZWlnaHQ9IjkxIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfMjk2XzQ0NTI1KSIgZmlsbC1vcGFjaXR5PSIwLjgiLz4KPC9nPgo8ZGVmcz4KPGZpbHRlciBpZD0iZmlsdGVyMF9mXzI5Nl80NDUyNSIgeD0iMCIgeT0iMCIgd2lkdGg9IjI4NCIgaGVpZ2h0PSIxOTEiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMjUiIHJlc3VsdD0iZWZmZWN0MV9mb3JlZ3JvdW5kQmx1cl8yOTZfNDQ1MjUiLz4KPC9maWx0ZXI+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8yOTZfNDQ1MjUiIHgxPSI1MCIgeTE9IjYzLjA1NDkiIHgyPSIxNTIuMDg4IiB5Mj0iLTI4LjE4OCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNDVBM0Y5Ii8+CjxzdG9wIG9mZnNldD0iMC4zNzUiIHN0b3AtY29sb3I9IiM4OTIwRkUiIHN0b3Atb3BhY2l0eT0iMC44MSIvPgo8c3RvcCBvZmZzZXQ9IjAuNjE5NzkyIiBzdG9wLWNvbG9yPSIjRkYwQkU1Ii8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0ZGQzgwMCIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=");
+        position: absolute;
+        inset-inline-start: -60px;
+        inset-block-start: -39px;
+        z-index: -1;
+        inline-size: 117%;
+        block-size: 123%;
+    }
+  `;
+
+        constructor() {
+            super();
+        }
+
+        render() {
+            return html`
+      <button class="tab-navigation-button ${this.active ? 'tab-navigation-button-active' : ''}" @click="${this._handleClick}">
+          <div>
+              <div class="svg-container">
+                  <slot name="svg-icon"></slot>
+              </div>
+              <div class="tab-title">
+                <slot name="title"></slot>
+              </div>
+          </div>
+      </button>
+    `;
+        }
+
+        _handleClick() {
+            this.dispatchEvent(new CustomEvent('navigation-button-click', {
+                detail: { active: this.active, name: this.name, key: this.key },
+                bubbles: true,
+                composed: true
+            }));
+        }
+    }
+
+    customElements.define('tab-button', TabButton);
+
+</script>
+<script type="module" id="tab-card-content">
+    import { LitElement, html, css, unsafeHTML } from 'https://cdn.jsdelivr.net/gh/lit/dist@3.1.4/all/lit-all.min.js';
+
+    export class TabCardContent extends LitElement {
+        static properties = {
+            contentTitle: { attribute: "content-title" },
+            contentDescription: { attribute: "content-description" },
+            contentList: { type: Array, attribute: "content-list" },
+            testimonial: { type: Object },
+            featureList: { type: Array, attribute: "feature-list" },
+            ctaButtonURL: { attribute: "cta-button-url" },
+            ctaButtonContent: { attribute: "cta-button-content" }
+        };
+
+        static styles = css`
+            ::host {
+                /* CSS Variables that may have been missed get put on body */
+                --font-size: 0.875rem;
+                --line-height: 1.7857142857;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    transition-duration: .01ms !important;
+                    animation-duration: .01ms !important;
+                    animation-iteration-count: 1 !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+
+            ::host {
+                margin: 0;
+                padding: 0;
+                color: rgb(var(--color-grey-0, 41, 45, 52));
+                scroll-behavior: smooth;
+            }
+
+            *,
+            :after,
+            :before {
+                box-sizing: border-box;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+
+                *,
+                :after,
+                :before {
+                    transition-duration: .01ms !important;
+                    animation-duration: .01ms !important;
+                    animation-iteration-count: 1 !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+
+            .teams-tab-content-wrapper {
+                margin: auto;
+                margin-block-end: 42px;
+                border-radius: 14px;
+                border: 1px solid #ceceea;
+                max-width: 1160px;
+            }
+
+            .teams-tab-content-wrapper {
+                position: relative;
+                box-shadow: 0 3px 10px 0 rgba(0, 0, 0, .05);
+            }
+
+            .teams-tab-content-wrapper:after {
+                content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTExNiIgaGVpZ2h0PSI1MDMiIHZpZXdCb3g9IjAgMCAxMTE2IDUwMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgb3BhY2l0eT0iMC4zIiBmaWx0ZXI9InVybCgjZmlsdGVyMF9mXzMxNF84OTc2KSI+CjxwYXRoIGQ9Ik0xMDAgMjAwQzEwMCAxNDQuNzcyIDE0NC43NzIgMTAwIDIwMCAxMDBIOTE2Qzk3MS4yMjggMTAwIDEwMTYgMTQ0Ljc3MiAxMDE2IDIwMFYzMDNDMTAxNiAzNTguMjI4IDk3MS4yMjggNDAzIDkxNiA0MDNIMjAwQzE0NC43NzIgNDAzIDEwMCAzNTguMjI4IDEwMCAzMDNWMjAwWiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzMxNF84OTc2KSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2ZfMzE0Xzg5NzYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMTE2IiBoZWlnaHQ9IjUwMyIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJzaGFwZSIvPgo8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1MCIgcmVzdWx0PSJlZmZlY3QxX2ZvcmVncm91bmRCbHVyXzMxNF84OTc2Ii8+CjwvZmlsdGVyPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfMzE0Xzg5NzYiIHgxPSIxMTEiIHkxPSIyNjAuNSIgeDI9IjQzMy45NTYiIHkyPSItMzM0LjYxNyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNDVDNEY5Ii8+CjxzdG9wIG9mZnNldD0iMC41NDg2MDEiIHN0b3AtY29sb3I9IiM4OTIwRkUiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjRkYwQkU1Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==);
+                position: absolute;
+                inset-inline-start: -80px;
+                inset-block-start: -66px;
+                z-index: -1;
+            }
+
+            button {
+                font: inherit;
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            .teams-tab-card-link {
+                color: rgb(var(--highlight-primary, var(--color-brand-clickup, 123, 104, 238)));
+                text-decoration: none;
+            }
+
+            .teams-tab-content-active {
+                position: relative;
+                display: flex;
+                justify-content: space-between;
+                border-radius: 13px;
+                background: rgb(var(--color-white, 255, 255, 255));
+                overflow: hidden;
+            }
+
+            .teams-tab-card-wrapper {
+                inset-inline-end: 63px;
+                inset-block-start: 74px;
+                z-index: 3;
+                max-inline-size: 461px;
+                padding: 27px 33px 38px 36px;
+                background: #f8f8fc;
+                box-shadow: 0 3px 10px 0 rgba(0, 0, 0, .05);
+                border-radius: 0 14px 14px 0;
+                margin-inline-start: 20px;
+            }
+
+            .teams-tab-card-wrapper:before {
+                content: url(https://storage.googleapis.com/msgsndr/RrgNUATufG40aCwCXAKL/media/669f5fb97ac84984b75f442d.png);
+                z-index: 1;
+                position: absolute;
+                inset-block-start: 0;
+                inset-inline-end: 433px;
+                block-size: 100%;
+                transform: scale(1.01);
+            }
+
+            .teams-tab-content-overview {
+                padding: 50px 0 47px 50px;
+                border-radius: 13px 13px 0 0;
+            }
+
+            .teams-tab-testimonial {
+                position: relative;
+                display: flex;
+                padding: 0 0 50px 50px;
+                border-radius: 0 0 13px 13px;
+            }
+
+            .teams-tab-card {
+                position: relative;
+            }
+
+            h3 {
+                margin: 0;
+            }
+
+            .teams-tab-content-title {
+                max-inline-size: 455px;
+                color: #24223e;
+                font-weight: 800;
+                font-size: 20px;
+                /* font-family: Axiforma; */
+                margin-block-end: 9px;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            .teams-tab-description {
+                max-inline-size: 455px;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .teams-tab-content-list {
+                display: grid;
+                grid-gap: 7px;
+                gap: 7px;
+                margin: 0;
+                margin-block-start: 20px;
+                padding: 0;
+            }
+
+            img {
+                display: block;
+            }
+
+            img {
+                max-inline-size: 100%;
+            }
+
+            .teams-tab-testimonial-image {
+                z-index: 1;
+                inline-size: 103px;
+                block-size: 103px;
+            }
+
+            img[width][height] {
+                block-size: auto;
+            }
+
+            .teams-tab-testimonial-image[width][height] {
+                inline-size: 103px;
+                block-size: 103px;
+                border-radius: 50%;
+            }
+
+            .teams-tab-testimonial-content {
+                max-inline-size: 426px;
+                margin-inline-start: 29px;
+            }
+
+            .teams-tab-card-button {
+                display: none !important;
+                position: absolute;
+                inline-size: 40px;
+                block-size: 40px;
+                border: unset;
+                border-radius: 50%;
+                background: transparent;
+                cursor: pointer;
+                transition: var(--button-transition, var(--transition-short, 0.25s var(--easing-natural, cubic-bezier(0.5, 0, 0.5, 1))));
+                transform: translateY(0);
+            }
+
+            .teams-tab-card-button-previous {
+                inset-inline-start: -62px;
+                inset-block-start: -5px;
+            }
+
+            .teams-tab-card-button:active,
+            .teams-tab-card-button:hover {
+                cursor: pointer;
+                transform: translateY(1px);
+            }
+
+            .teams-tab-card-button-next {
+                inset-inline-end: -46px;
+                inset-block-start: -5px;
+            }
+
+            .teams-tab-card-list {
+                margin-block-end: 25px;
+                padding: 0;
+                border: 1px solid #ceceea;
+                border-radius: 12px;
+                background: #fff;
+            }
+
+            .teams-tab-card-cta-button {
+                position: relative;
+                display: flex;
+                grid-gap: 10px;
+                gap: 10px;
+                justify-content: center;
+                align-items: center;
+                inline-size: 100%;
+                block-size: 52px;
+                border-radius: 12px;
+                background: linear-gradient(89deg, #45c4f9 -25.12%, #7d09ff 46.26%, #ff0be5 116.7%);
+                color: rgb(var(--color-white, 255, 255, 255));
+                box-shadow: 0 4px 4px 0 rgba(87, 75, 172, .15);
+                font-weight: 700;
+                text-decoration: none !important;
+                transition: var(--button-transition, var(--transition-short, 0.25s var(--easing-natural, cubic-bezier(0.5, 0, 0.5, 1))));
+                transform: translateY(0);
+            }
+
+            .teams-tab-card-cta-button:before {
+                content: "";
+                position: absolute;
+                inset-inline-start: 0;
+                inset-block-start: 0;
+                inline-size: 100%;
+                block-size: 100%;
+                border: 1px solid rgba(0, 0, 0, .1);
+                border-radius: 12px;
+            }
+
+            .teams-tab-card-cta-button:after {
+                content: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgZmlsdGVyPSJ1cmwoI2ZpbHRlcjBfZF84MDFfODQ1MDYpIj4KPHBhdGggZD0iTTMyLjM2NzggNi45MzkxOUMzNS4yMjM1IDQuMjg1NzUgMzkuNzI1NSA0LjU2MjU0IDQyLjIzOTkgNy41NDYxNEM0My44MDMzIDkuNDAxMzggNDYuMjM1NCAxMC4yODg2IDQ4LjYyNDEgOS44NzMzQzUyLjQzMiA5LjIxMTIyIDU2LjAzMDQgMTEuODQ2MiA1Ni41NTA2IDE1LjY3NzZMNTYuNTczNiAxNS44NDc0QzU2LjkwMTQgMTguMjYxMyA1OC40Njg0IDIwLjMyODcgNjAuNzA0MiAyMS4yOTY3QzY0LjI3NTMgMjIuODQzIDY1Ljg4NDggMjcuMDE4NCA2NC4yNzQ0IDMwLjU1ODRMNjQuMjE4MSAzMC42ODIxQzYzLjIwNDYgMzIuOTA5OSA2My40MjUxIDM1LjUxOTIgNjQuNzg0OCAzNy41NTY2QzY2Ljk2MDkgNDAuODE3IDY2LjA2OTYgNDUuMjUxNSA2Mi43ODI0IDQ3LjM4MDJDNjAuNzMyOCA0OC43MDc1IDU5LjUyMDUgNTEuMDA0OCA1OS41ODA5IDUzLjQ0NzFMNTkuNTg1NCA1My42Mjk1QzU5LjY4MTEgNTcuNDk5NSA1Ni41NjM0IDYwLjY4MiA1Mi42OTI3IDYwLjY2NTJDNTAuMjYzOSA2MC42NTQ3IDQ3Ljk5MTkgNjEuOTU5NSA0Ni43NDgxIDY0LjA0NDhDNDQuNzYyOSA2Ny4zNzI4IDQwLjM2NSA2OC40MjU3IDM3LjEyOTUgNjYuMjg3NkMzNS4xMDU1IDY0Ljk1IDMyLjUyMzQgNjQuNzkxMiAzMC4zNTMgNjUuODcwOUMyNi44ODM1IDY3LjU5NjkgMjIuNjQ1MyA2Ni4wMTMgMjEuMDc2NCA2Mi40NjY1QzIwLjA5MzQgNjAuMjQ0MyAxNy45OTU3IDU4LjY3MDggMTUuNTgzNiA1OC4zODM3QzExLjczOTYgNTcuOTI2MSA5LjAyODk2IDU0LjM4NTQgOS41OTA4OSA1MC41NTU3TDkuNjE3MzcgNTAuMzc1M0M5Ljk3MTk5IDQ3Ljk1ODUgOS4wNDU5MSA0NS41Mjk3IDcuMTcxNjYgNDMuOTYxMkM0LjE2NTYxIDQxLjQ0NTUgMy44MTYwMiAzNi45MzQ3IDYuMzY5MjkgMzMuOTY1MUM3Ljk2NDc3IDMyLjEwOTUgOC40OTgzOCAyOS41NDY1IDcuNzYxMTkgMjcuMjExTDcuNzIwMjkgMjcuMDgxNEM2LjU0ODkxIDIzLjM3MDMgOC42NTAyNSAxOS40MjMxIDEyLjM4MTUgMTguMzI1OEMxNC43MTc0IDE3LjYzODggMTYuNTIyMyAxNS43Nzg3IDE3LjEzODggMTMuNDIyOUwxNy4xODIyIDEzLjI1NzJDMTguMTYwOCA5LjUxNzk3IDIyLjA1MDQgNy4zNDMzMiAyNS43NTAyIDguNDY2OTlDMjguMDcxMSA5LjE3MTg3IDMwLjU5MjEgOC41ODkxMyAzMi4zNjc4IDYuOTM5MTlaIiBmaWxsPSIjRkExMkUzIi8+CjxwYXRoIGQ9Ik01Ni4xMjYxIDE1LjczNDhMNTYuNTUwNiAxNS42Nzc2TDU2LjEyNjEgMTUuNzM0OUw1Ni4xNDkxIDE1LjkwNDZDNTYuNDk3MSAxOC40NjczIDU4LjE2MDcgMjAuNjYyMiA2MC41MzQzIDIxLjY4OTlDNjMuODg1MyAyMy4xNDA5IDY1LjM5NTYgMjcuMDU4OCA2My44ODQ0IDMwLjM4MDdMNjMuODI4MiAzMC41MDQzTDY0LjIxODEgMzAuNjgyMUw2My44MjgyIDMwLjUwNDNDNjIuNzUyOCAzMi44NjgyIDYyLjk4NzEgMzUuNjM0NSA2NC40Mjg2IDM3Ljc5NDJDNjYuNDczNCA0MC44NTc5IDY1LjYzNCA0NS4wMjMgNjIuNTQ5MyA0Ny4wMjA1QzYwLjM3NDcgNDguNDI4NyA1OS4wODg2IDUwLjg2NjEgNTkuMTUyNiA1My40NTczTDU5LjE1NzIgNTMuNjM5N0M1OS4yNDY5IDU3LjI2ODQgNTYuMzIzNSA2MC4yNTI1IDUyLjY5NDEgNjAuMjM2OEM1MC4xMTEzIDYwLjIyNTYgNDcuNzAwMiA2MS42MTIgNDYuMzgwMSA2My44MjVDNDQuNTE3MSA2Ni45NDgyIDQwLjM5MjQgNjcuOTMwNSAzNy4zNjU1IDY1LjkzMDJDMzUuMjEzOSA2NC41MDgzIDMyLjQ2OSA2NC4zMzk1IDMwLjE2MTkgNjUuNDg3M0MyNi45MTYxIDY3LjEwMiAyMi45NDA1IDY1LjYyMTcgMjEuNDY4MSA2Mi4yOTM0QzIwLjQyNDkgNTkuOTM1MSAxOC4xOTg5IDU4LjI2MzYgMTUuNjMzOSA1Ny45NTgzQzEyLjAyOTUgNTcuNTI5MiA5LjQ4Nzg1IDU0LjIwOTIgMTAuMDE0NyA1MC42MTgzTDEwLjA0MTIgNTAuNDM3OUMxMC40MTc1IDQ3Ljg3MzcgOS40MzQ5MiA0NS4yOTY5IDcuNDQ2NCA0My42MzI4QzQuNjI1NTcgNDEuMjcyMSA0LjI5NDk3IDM3LjAzNTEgNi42OTQyMiAzNC4yNDQ2QzguMzg1NTQgMzIuMjc3NSA4Ljk1MTg4IDI5LjU2MDQgOC4xNjk3MSAyNy4wODI0TDguMTI4OCAyNi45NTI4QzcuMDI5NjIgMjMuNDcwNCA5LjAwMTQ1IDE5Ljc2NjUgMTIuNTAyNyAxOC43MzY5QzE0Ljk4MjYgMTguMDA3NSAxNi44OTg4IDE2LjAzMjggMTcuNTUzMyAxMy41MzE3TDE3LjU5NjYgMTMuMzY2QzE4LjUxMzcgOS44NjE4NSAyMi4xNTg5IDcuODIzOSAyNS42MjYxIDguODc2OTNDMjguMDkzIDkuNjI2MTcgMzAuNzcyNCA5LjAwNjc1IDMyLjY1OTYgNy4yNTMyQzM1LjMzNiA0Ljc2NjI4IDM5LjU1NTkgNS4wMjU3MiA0MS45MTI0IDcuODIyMDhDNDMuNTc0MSA5Ljc5MzgxIDQ2LjE1ODkgMTAuNzM2OSA0OC42OTc5IDEwLjI5NTRDNTIuMjY2NCA5LjY3NDk1IDU1LjYzODYgMTIuMTQ0MyA1Ni4xMjYxIDE1LjczNDhaIiBzdHJva2U9IiM4QTAwN0MiIHN0cm9rZS13aWR0aD0iMC44NTY4NDEiLz4KPC9nPgo8cGF0aCBkPSJNMTcuNTU1MyA0MC45NDU4TDE4LjE2NzcgMzAuODMzTDI0LjkxMzcgMzEuMjQ3OEwyNC43OTc3IDMzLjE2MzZMMjAuMDc2OCAzMi44NzM0TDE5LjkzOTMgMzUuMTQ1TDI0LjA4NTQgMzUuMzk5OUwyMy45NzAyIDM3LjMwMkwxOS44MjQxIDM3LjA0NzFMMTkuNTgwNSA0MS4wNzAzTDE3LjU1NTMgNDAuOTQ1OFpNMzEuNTc0NyA0MS44MDc3TDI5LjY2MyAzNy45OTU0TDI4LjQ1ODggMzcuOTIxNEwyOC4yMzU5IDQxLjYwMjVMMjYuMjEwNyA0MS40Nzc5TDI2LjgyMzEgMzEuMzY1MkwzMC42OTU1IDMxLjYwMzNDMzMuMDYyOCAzMS43NDg4IDM0LjA2NTUgMzMuMzM1MSAzMy45NjM2IDM1LjAxODNDMzMuODg5OSAzNi4yMzYyIDMzLjE5OTUgMzcuNDI5OSAzMS43MzEzIDM3Ljg2MTZMMzMuOTQyIDQxLjk1MzNMMzEuNTc0NyA0MS44MDc3Wk0yOC43MzQ3IDMzLjM2NDVMMjguNTY5IDM2LjEwMTNMMzAuMjI0NyAzNi4yMDMxQzMxLjM2MDUgMzYuMjczIDMxLjgzOTggMzUuNjE1NyAzMS44ODIgMzQuOTE3OEMzMS45MjYgMzQuMTkyNSAzMS40ODUxIDMzLjUzMzYgMzAuNTY4MyAzMy40NzcyTDI4LjczNDcgMzMuMzY0NVpNMzUuODU1IDQyLjA3MDlMMzYuNDY3NCAzMS45NTgxTDQzLjMyMjggMzIuMzc5Nkw0My4yMDg1IDM0LjI2ODFMMzguMzkxOSAzMy45NzE5TDM4LjI2MDEgMzYuMTQ3N0w0Mi43MjEgMzYuNDIyTDQyLjYwNjYgMzguMzEwNEwzOC4xNDU4IDM4LjAzNjJMMzguMDA4MiA0MC4zMDc4TDQyLjgyNDkgNDAuNjAzOUw0Mi43MTA1IDQyLjQ5MjRMMzUuODU1IDQyLjA3MDlaTTQ0Ljk3ODEgNDIuNjMxOEw0NS41OTA1IDMyLjUxOUw1Mi40NDYgMzIuOTQwNUw1Mi4zMzE2IDM0LjgyOUw0Ny41MTUgMzQuNTMyOEw0Ny4zODMyIDM2LjcwODZMNTEuODQ0MSAzNi45ODI5TDUxLjcyOTggMzguODcxM0w0Ny4yNjg5IDM4LjU5NzFMNDcuMTMxMyA0MC44Njg3TDUxLjk0OCA0MS4xNjQ4TDUxLjgzMzYgNDMuMDUzM0w0NC45NzgxIDQyLjYzMThaIiBmaWxsPSJ3aGl0ZSIvPgo8ZGVmcz4KPGZpbHRlciBpZD0iZmlsdGVyMF9kXzgwMV84NDUwNiIgeD0iMS4yMzY3IiB5PSI1LjExNTc4IiB3aWR0aD0iNjguMTY1MyIgaGVpZ2h0PSI2OS4xMzgyIiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+CjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+CjxmZUNvbG9yTWF0cml4IGluPSJTb3VyY2VBbHBoYSIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDEyNyAwIiByZXN1bHQ9ImhhcmRBbHBoYSIvPgo8ZmVPZmZzZXQgZHk9IjMuNDI3MzYiLz4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS43MTM2OCIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMC4zNDI4MjkgMCAwIDAgMCAwLjI5MjUgMCAwIDAgMCAwLjY3NSAwIDAgMCAwLjE1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfODAxXzg0NTA2Ii8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iZWZmZWN0MV9kcm9wU2hhZG93XzgwMV84NDUwNiIgcmVzdWx0PSJzaGFwZSIvPgo8L2ZpbHRlcj4KPC9kZWZzPgo8L3N2Zz4K");
+                position: absolute;
+                inset-inline-end: 11px;
+                inset-block-start: -27px;
+            }
+
+            .teams-tab-card-cta-button:active,
+            .teams-tab-card-cta-button:hover {
+                cursor: pointer;
+                transform: translateY(1px);
+            }
+
+            .teams-tab-content-list-element {
+                display: flex;
+                align-items: center;
+                color: #24223e;
+                list-style-type: none;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+            }
+
+            .teams-tab-content-list-element:before {
+                content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOSIgaGVpZ2h0PSIxOSIgdmlld0JveD0iMCAwIDE5IDE5IiBmaWxsPSJub25lIj4KICA8cGF0aCBkPSJNOS41IDFDMTQuMzczMSAxIDE4IDQuNjI2OTMgMTggOS41QzE4IDE0LjQwMDMgMTQuNDAwMyAxOCA5LjUgMThDNC41OTk3IDE4IDEgMTQuNDAwMyAxIDkuNUMxIDQuNjI2OTMgNC42MjY5MyAxIDkuNSAxWiIgZmlsbD0iIzI0MjIzRSIgZmlsbC1vcGFjaXR5PSIwLjEiIHN0cm9rZT0iIzI0MjIzRSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNNS41Nzc5IDExLjM5NDNDNy4yMDQ1NiAxMi4zOTczIDcuODQ3MjYgMTMuMzY3NiA3Ljg0NzI2IDEzLjM2NzZDNy44NDcyNiAxMy4zNjc2IDguNzcwOTggMTEuNTggMTAuNDAyNyA5LjU0NzUzQzEyLjE2MDIgNy4zNTgzNCAxMy4zODg1IDYuNDc3MDIgMTMuMzg4NSA2LjQ3NzAyIiBzdHJva2U9IiMyNDIyM0UiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==");
+                margin-inline-end: 12px;
+            }
+
+            .teams-tab-testimonial-svg-wrapper {
+                display: flex;
+                grid-gap: 24px;
+                gap: 24px;
+                align-items: center;
+                block-size: 16px;
+            }
+
+            .teams-tab-testimonial-quote {
+                min-block-size: 75px;
+                margin: 15px 0 7px;
+            }
+
+            .teams-tab-card-list-element {
+                display: flex;
+                grid-gap: 12px;
+                gap: 12px;
+                align-items: center;
+                min-inline-size: 388px;
+                padding: 14px 13px;
+                list-style-type: none;
+                border-block-end: 1px solid #ceceea;
+            }
+
+            .teams-tab-card-list-element:last-child {
+                border-block-end: none;
+            }
+
+            .teams-tab-testimonial-logo {
+                display: flex;
+                align-items: center;
+                block-size: 26px;
+            }
+
+            .paragraph {
+                font-weight: 400;
+                font-size: var(--font-size, 0.875rem);
+                line-height: var(--line-height, 1.7857142857);
+            }
+
+            .paragraph {
+                --font-size: 0.875rem;
+                --line-height: 1.7857142857;
+            }
+
+            .teams-tab-testimonial p {
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 24px;
+            }
+
+            .paragraph {
+                color: rgba(var(--color-v3-grey, 36, 34, 62));
+                font-weight: 500;
+            }
+
+            .paragraph {
+                margin-block-start: -.19rem;
+                font-size: .9375rem;
+                line-height: 1.4;
+            }
+
+            .teams-tab-card-feature-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                inline-size: 40px;
+                block-size: 40px;
+                background-color: #f8f8fc;
+                clip-path: path("M20 39.999C23.9001 39.999 27.1545 39.8516 29.7893 39.6481C35.1869 39.2311 39.2321 35.186 39.6491 29.7884C39.8526 27.1537 40 23.8994 40 19.9995C40 16.0996 39.8526 12.8454 39.6491 10.2106C39.2321 4.81304 35.1869 0.767851 29.7893 0.35091C27.1545 0.147381 23.9001 -7.03733e-07 20 -8.74206e-07C15.9184 -1.05261e-06 12.544 0.161415 9.8469 0.379677C4.64502 0.80063 0.754963 4.64006 0.35318 9.84345C0.148483 12.4944 6.93663e-06 15.8481 6.75517e-06 19.9995C6.5737e-06 24.1509 0.148482 27.5046 0.353179 30.1555C0.754961 35.3589 4.64502 39.1984 9.84689 39.6193C12.544 39.8376 15.9184 39.999 20 39.999Z");
+            }
+
+            .paragraph strong {
+                font-weight: 800;
+            }
+        `;
+
+        constructor() {
+            super();
+
+            this.requiredFields = [
+                "contentTitle",
+                "contentDescription",
+                "contentList",
+                "featureList",
+                "ctaButtonURL",
+                "ctaButtonContent"
+            ]
+        }
+
+        hasValidFields() {
+            // If the requiredFields do not exist or is empty
+            // fields are valid by default
+            if (!this.requiredFields || (this.requiredFields && this.requiredFields.length == 0)) {
+                return true;
+            }
+
+            return this.hasFields(this, this.requiredFields);
+        }
+
+        hasFields(obj, fieldList) {
+            if (!fieldList || (fieldList && fieldList.length === 0)) {
+                return false;
+            }
+
+            let result = true;
+            for (let i = 0; i < fieldList.length; i++) {
+                let fieldName = fieldList[i];
+                result = result && (Boolean(obj[fieldName]));
+            }
+
+            return result;
+        }
+
+        contentOverview() {
+            return html`
+            <div class="teams-tab-content-overview">
+                <h3 class="teams-tab-content-title">${this.contentTitle}</h3>
+                <p class="teams-tab-description">${this.contentDescription}</p>
+                <ul class="teams-tab-content-list">
+                    ${this.contentList.map((item, index) => html`<li class="teams-tab-content-list-element">${item}</li>`)}
+                </ul>
+            </div>
+        `;
+        }
+
+        teamTestimonial() {
+            if (!this.testimonial) {
+                return html``;
+            }
+
+            const requiredFields = ["imagePath", "starsSVG", "logoSVG", "quoteStrong", "quoteNormal"];
+            if (!this.hasFields(this.testimonial, requiredFields)) {
+                return html``;
+            }
+
+            return html`
+            <div class="teams-tab-testimonial">
+                <img src="${this.testimonial.imagePath}" alt="testimonial headshot" width="200" height="200"
+                    class="teams-tab-testimonial-image">
+                <div class="teams-tab-testimonial-content">
+                    <div class="teams-tab-testimonial-svg-wrapper">
+                        ${unsafeHTML(this.testimonial.starsSVG)}
+                        <div class="teams-tab-testimonial-logo">
+                            ${unsafeHTML(this.testimonial.logoSVG)}
+                        </div>
+                    </div>
+                    <div class="teams-tab-testimonial-wrapper teams-tab-testimonial-quote">
+                        <p class="paragraph">“<strong>${this.testimonial.quoteStrong}</strong> ${this.testimonial.quoteNormal}”</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        }
+
+        featureCardList() {
+            if (!this.featureList) {
+                return html``;
+            }
+
+            const requiredFields = ["svgIcon", "featureText"];
+            return html`
+            <ul class="teams-tab-card-list">
+                ${this.featureList.map((item, index) => {
+                if (!this.hasFields(item, requiredFields)) {
+                    return html``;
+                }
+
+                return html`
+                        <li class="teams-tab-card-list-element">
+                            <div class="teams-tab-card-feature-wrapper">
+                                ${unsafeHTML(item.svgIcon)}
+                            </div>
+                            <div>
+                                ${unsafeHTML(item.featureText)}
+                            </div>
+                        </li>
+                    `
+            })}
+            </ul>
+        `;
+        }
+
+        ctaButton() {
+            return html`
+            <a class="teams-tab-card-link teams-tab-card-cta-button" rel="" target=""
+                href="${this.ctaButtonURL ? this.ctaButtonURL : ""}">
+                ${this.ctaButtonContent ? unsafeHTML(this.ctaButtonContent) :
+                    html`
+                        Use this Solution
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="11"
+                            viewBox="0 0 15 11" fill="none">
+                            <path d="M14 5.5L0.999999 5.5M14 5.5L9.16279 1M14 5.5L9.16279 10" stroke="white"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    `
+                }
+            </a>
+        `;
+        }
+
+        render() {
+            if (!this.hasValidFields()) {
+                return html``;
+            }
+
+            return html`
+            <div class="teams-tab-content-wrapper">
+                <div class="teams-tab-content teams-tab-content-active">
+                    <div>
+                        ${this.contentOverview()}
+                        ${this.teamTestimonial()}
+                    </div>
+                    <div class="teams-tab-card-wrapper">
+                        <div class="teams-tab-card">
+                            <button type="button" class="teams-tab-card-button teams-tab-card-button-previous">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
+                                    fill="none">
+                                    <rect x="39.5" y="39.5" width="39" height="39" rx="19.5"
+                                        transform="rotate(-180 39.5 39.5)" fill="white" stroke="#CECEEA"></rect>
+                                    <path d="M21 26L16 20.5L21 15" stroke="#7F76B3" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="teams-tab-card-button teams-tab-card-button-next"
+                                data-segment-button-clicked="next">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
+                                    fill="none">
+                                    <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" fill="white" stroke="#CECEEA">
+                                    </rect>
+                                    <path d="M19 14L24 19.5L19 25" stroke="#7F76B3" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            ${this.featureCardList()}
+                            ${this.ctaButton()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        }
+    }
+
+    customElements.define('tab-card-content', TabCardContent);
+</script>
+<script type="module" id="team-carousel">
+    import { LitElement, html, css, unsafeHTML } from 'https://cdn.jsdelivr.net/gh/lit/dist@3.1.4/all/lit-all.min.js';
+
+    export class TeamCarousel extends LitElement {
+        static properties = {
+            buttonConfiguration: { attribute: 'button-configuration' },
+            activeButtonIndex: { attribute: 'active-button-index' }
+        };
+
+        static styles = css`
+        .tab-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            overflow-x: clip;
+            gap: 19px;
+            max-inline-size: var(--size-v3-homepage-container, 1160px);
+            margin: auto;
+            padding: 25px 0;
+        }
+    `;
+
+        constructor() {
+            super();
+            this.activeButtonIndex = 0;
+            this.requiredFields = [
+                "buttonConfiguration",
+                "activeButtonIndex"
+            ];
+        }
+
+        connectedCallback() {
+            super.connectedCallback();
+            let self = this;
+
+            // Attach Callback for Listening to Button Clicks
+            document.addEventListener("navigation-button-click", (event) => {
+                console.log("event.detail:", event.detail);
+                let { key } = event.detail;
+
+                // Reset all isActive flags
+                self.activeButtonIndex = Number(key);
+
+                // Request an update explicitly
+                self.requestUpdate();
+            });
+        }
+
+        hasValidFields() {
+            // If the requiredFields do not exist or is empty
+            // fields are valid by default
+            if (!this.requiredFields || (this.requiredFields && this.requiredFields.length == 0)) {
+                return true;
+            }
+
+            return this.hasFields(this, this.requiredFields);
+        }
+
+        hasFields(obj, fieldList) {
+            if (!fieldList || (fieldList && fieldList.length === 0)) {
+                return false;
+            }
+
+            let result = true;
+            for (let i = 0; i < fieldList.length; i++) {
+                let fieldName = fieldList[i];
+                result = result && (Boolean(obj[fieldName]));
+            }
+
+            return result;
+        }
+
+
+        navigationButtons() {
+            if (!this.buttonConfiguration || (this.buttonConfiguration && this.buttonConfiguration.length === 0)) {
+                return html``;
+            }
+
+            const requiredFields = ["svgIcon", "title"];
+
+            return html`
+            <div class="tab-container">
+                ${this.buttonConfiguration.map((item, index) => {
+                let navigationButton = item.navigationButton;
+
+                if (!navigationButton) {
+                    return html``;
+                }
+
+                if (!this.hasFields(navigationButton, requiredFields)) {
+                    return html``;
+                }
+
+                return html`
+                        <tab-button ?active=${index === this.activeButtonIndex} .name=${navigationButton.title} .key=${index}>
+                            ${unsafeHTML(navigationButton.svgIcon)}
+                            <div slot="title">
+                                ${unsafeHTML(navigationButton.title)}
+                            </div>
+                        <tab-button>
+                    `;
+            })}
+            </div>
+        `;
+        }
+
+        card() {
+            if (!this.buttonConfiguration || (this.buttonConfiguration && this.buttonConfiguration.length === 0)) {
+                return html``;
+            }
+
+            const item = this.buttonConfiguration[this.activeButtonIndex];
+            return html`<tab-card-content 
+                .contentTitle=${item.contentTitle} 
+                .contentDescription=${item.contentDescription}
+                .contentList=${item.contentList}
+                .testimonial=${item.testimonial}
+                .featureList=${item.featureList}
+                .ctaButtonURL=${item.ctaButtonURL}
+                .ctaButtonContent=${item.ctaButtonContent}
+            ></tab-card-content>`;
+        }
+
+        render() {
+            return html`
+            ${this.navigationButtons()}
+            ${this.card()}
+        `;
+        }
+    }
+
+    customElements.define('team-carousel', TeamCarousel);
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let teamCarouselEl = document.querySelector("#team-carousel");
+        let properties = {
+            buttonConfiguration: [
+                {
+                    navigationButton: {
+                        svgIcon: "<svg fill=none height=32 slot=svg-icon viewBox='0 0 32 32'width=32 xmlns=http://www.w3.org/2000/svg><path d='M29.3878 27.6324C30.0565 25.8316 30.936 22.4345 30.936 17.0237C30.936 15.3966 30.6499 11.4219 30.6499 11.4219C30.6499 11.4219 25.4995 10.2773 16.0571 10.2773C6.61475 10.2773 1.17825 11.4219 1.17825 11.4219L1.17822 17.0237C1.17822 22.5411 2.09274 25.9332 2.76571 27.6824C3.15473 28.6935 3.95192 29.4507 4.99208 29.7538C6.69592 30.2503 10.0411 30.8789 16.0571 30.8789C21.9135 30.8789 25.239 30.3105 26.9831 29.8433C28.1125 29.5408 28.9809 28.7285 29.3878 27.6324Z'fill=#514B81 fill-opacity=0.1></path><path d='M12.6235 22.8672H18.9185'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M12.6235 17.7168H23.4966'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><rect fill=#514B81 height=1.14453 rx=0.572266 stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2 transform='rotate(-90 8.04541 18.2891)'width=1.14453 x=8.04541 y=18.2891></rect><rect fill=#514B81 height=1.14453 rx=0.572266 stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2 transform='rotate(-90 8.04541 23.4395)'width=1.14453 x=8.04541 y=23.4395></rect><path d='M30.7271 11.4219C30.6701 10.6333 30.6049 9.90903 30.5361 9.25033C30.225 6.27489 27.9516 4.04777 24.9723 3.77641C22.7821 3.57692 19.8245 3.41016 16.0571 3.41016C12.2897 3.41016 9.33217 3.57692 7.142 3.77641C4.16267 4.04777 1.88928 6.27489 1.57819 9.25033C1.50932 9.90903 1.44412 10.6333 1.38713 11.4219M30.7271 11.4219C30.8509 13.1347 30.936 15.1507 30.936 17.4567C30.936 20.8126 30.7558 23.4561 30.5383 25.4242C30.232 28.1972 28.1309 30.2377 25.3533 30.4999C23.1817 30.705 20.1373 30.8789 16.0571 30.8789C11.977 30.8789 8.93253 30.705 6.76091 30.4999C3.9834 30.2377 1.88227 28.1972 1.57591 25.4242C1.35847 23.4561 1.17822 20.8126 1.17822 17.4567C1.17822 15.1507 1.26333 13.1347 1.38713 11.4219M30.7271 11.4219C30.7271 11.4219 25.2197 10.2773 16.0571 10.2773C6.89454 10.2773 1.38713 11.4219 1.38713 11.4219'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M8.08943 1.12109C8.08943 1.12109 8.04541 2.02717 8.04541 6.27148M24.0248 1.12109C24.0248 1.12109 24.0688 2.02717 24.0688 6.27148'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                        title: "PMO"
+                    },
+                    contentTitle: "Deliver projects on time, every time",
+                    contentDescription: "Get teams running more efficiently with a complete project management solution.",
+                    contentList: [
+                        "Reduce delivery time with custom emplates",
+                        "Track effort to impact with OKR planning",
+                        "Manage complex projects at scale"
+                    ],
+                    featureList: [
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 26 24'width=26 xmlns=http://www.w3.org/2000/svg><rect height=7.84481 rx=3.92241 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2 width=7.84481 x=9.07617 y=8.07703></rect><path d='M10.823 21.1333C11.5197 21.3167 12.2487 21.4143 12.9994 21.4143C13.8255 21.4143 14.6255 21.2964 15.3849 21.0756L15.8252 21.879C16.3192 22.7805 17.2928 23.1628 18.1486 22.6423L19.1816 22.014C20.0373 21.4935 20.1948 20.4232 19.7007 19.5217L19.2615 18.7201C20.3709 17.5743 21.1983 16.1265 21.6236 14.503L22.5416 14.503C23.5297 14.503 24.3308 13.6591 24.3308 12.618L24.3308 11.3614C24.3308 10.3204 23.5297 9.47652 22.5416 9.47652L21.6236 9.47652C21.1983 7.85294 20.3709 6.40522 19.2615 5.2594L19.7007 4.45783C20.1948 3.55629 20.0373 2.48597 19.1815 1.96547L18.1486 1.33717C17.2928 0.816659 16.3343 1.20811 15.8402 2.10965L15.2985 2.87932C14.5648 2.67438 13.7942 2.56517 12.9994 2.56517C12.1732 2.56517 11.3733 2.68304 10.6138 2.90387L10.1586 2.10964C9.66449 1.2081 8.70589 0.81666 7.85015 1.33717L6.81717 1.96547C5.96143 2.48597 5.78892 3.5654 6.28298 4.46694L6.73728 5.2594C5.62783 6.40522 4.80047 7.85294 4.37513 9.47652L3.45714 9.47652C2.46901 9.47652 1.66797 10.3204 1.66797 11.3614L1.66797 12.618C1.66797 13.6591 2.46901 14.503 3.45714 14.503L4.37513 14.503C4.80047 16.1265 5.62783 17.5743 6.73728 18.7201L6.298 19.5217C5.80394 20.4232 5.96144 21.4935 6.81718 22.014L7.85016 22.6423C8.70591 23.1628 9.80014 22.8539 10.2942 21.9523L10.823 21.1333Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M12.9994 21.4142C12.2487 21.4142 11.5197 21.3166 10.823 21.1332L10.2942 21.9522C9.80014 22.8538 8.7059 23.1627 7.85016 22.6422L6.81718 22.0139C5.96144 21.4934 5.80394 20.4231 6.298 19.5215L6.73728 18.72C5.62783 17.5741 4.80047 16.1264 4.37512 14.5028H3.45713C2.469 14.5028 1.66797 13.6589 1.66797 12.6179V11.3613C1.66797 10.3203 2.469 9.4764 3.45713 9.4764H4.37512C4.80047 7.85282 5.62783 6.4051 6.73728 5.25928L6.28298 4.46683C5.78892 3.56528 5.96142 2.48585 6.81717 1.96535L7.85015 1.33705C8.70589 0.816541 9.66449 1.20798 10.1586 2.10952L10.6138 2.90375C11.3733 2.68292 12.1732 2.56505 12.9994 2.56505C13.7942 2.56505 14.5648 2.67426 15.2985 2.8792L15.8402 2.10954C16.3343 1.208 17.2928 0.816541 18.1486 1.33705L19.1815 1.96535C20.0373 2.48585 20.1948 3.55617 19.7007 4.45771L19.2615 5.25928C20.3709 6.4051 21.1983 7.85282 21.6236 9.4764H22.5416C23.5297 9.4764 24.3308 10.3203 24.3308 11.3613V12.6179C24.3308 13.6589 23.5297 14.5028 22.5416 14.5028H21.6236C21.1983 16.1264 20.3709 17.5741 19.2615 18.72L19.7007 19.5215C20.1948 20.4231 20.0373 21.4934 19.1816 22.0139L18.1486 22.6422C17.2928 23.1627 16.3192 22.7804 15.8252 21.8788L15.3849 21.0755C14.6255 21.2963 13.8255 21.4142 12.9994 21.4142ZM12.9986 8.07685C10.8323 8.07685 9.07617 9.83297 9.07617 11.9993C9.07617 14.1655 10.8323 15.9217 12.9986 15.9217C15.1649 15.9217 16.921 14.1655 16.921 11.9993C16.921 9.83297 15.1649 8.07685 12.9986 8.07685Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path></svg>",
+                            featureText: "Flexible workflows for every team"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 22 26'width=22 xmlns=http://www.w3.org/2000/svg><path d='M10.7854 24.0781C8.66867 24.0781 7.02115 23.9643 5.78178 23.8195C3.82327 23.5908 2.44609 22.0688 2.26769 20.1051C2.11868 18.4648 1.98828 16.1164 1.98828 12.9208C1.98828 9.72521 2.11868 7.37684 2.26769 5.73655C2.44609 3.77281 3.82327 2.25079 5.78178 2.02208C7.02115 1.87735 8.66867 1.76355 10.7854 1.76355C12.8827 1.76355 14.5752 1.87528 15.8821 2.01812C18.0211 2.2519 19.5602 3.92445 19.7456 6.06815C19.8889 7.72608 20.0116 9.99856 20.0116 12.9208C20.0116 13.9313 19.9969 14.8641 19.9718 15.7207C17.8175 17.5349 15.203 17.5033 13.9251 17.348C13.5866 17.3068 13.2658 17.647 13.3203 17.9836C13.5225 19.2321 13.608 21.7863 11.6278 24.0719C11.3546 24.076 11.0738 24.0781 10.7854 24.0781Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path><path d='M5.78195 23.8195C7.02132 23.9643 8.66884 24.0781 10.7855 24.0781C12.8828 24.0781 14.5754 23.9663 15.8823 23.8235C18.0212 23.5897 19.5604 21.9172 19.7457 19.7735C19.8891 18.1155 20.0117 15.8431 20.0117 12.9208C20.0117 9.99856 19.8891 7.72608 19.7457 6.06815C19.5604 3.92445 18.0212 2.2519 15.8823 2.01812C14.5754 1.87528 12.8828 1.76355 10.7855 1.76355C8.66884 1.76355 7.02132 1.87735 5.78195 2.02208C3.82344 2.25079 2.44625 3.77281 2.26786 5.73655C2.11885 7.37684 1.98845 9.72521 1.98845 12.9208C1.98845 16.1164 2.11885 18.4648 2.26786 20.1051C2.44625 22.0688 3.82344 23.5908 5.78195 23.8195Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M19.7969 15.4952C17.3478 18.1589 15.4715 15.5294 13.5746 17.4263C11.6776 19.3232 14.3071 21.1996 11.4289 23.8632'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 6.91272H15.2915'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 11.2042H12.2876'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Tasks, docs, spreadsheets, and more"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 24 24'width=24 xmlns=http://www.w3.org/2000/svg><path d='M22.7943 11.7377C22.7943 9.84448 22.7296 8.23485 22.6363 6.89845C22.4165 3.74637 20.0557 1.38562 16.9036 1.16577C15.5672 1.07255 13.9575 1.00781 12.0641 1.00781C10.1708 1.00781 8.5611 1.07255 7.22465 1.16577C4.07257 1.38562 1.7118 3.74637 1.49194 6.89845C1.39872 8.23485 1.33398 9.84448 1.33398 11.7377C1.33398 13.7326 1.40586 15.4126 1.5072 16.7899C1.73071 19.8278 3.97163 22.0952 7.0103 22.3071C8.36641 22.4017 10.0382 22.4676 12.0641 22.4676C14.09 22.4676 15.7619 22.4017 17.118 22.3071C20.1567 22.0952 22.3976 19.8278 22.6211 16.7899C22.7224 15.4126 22.7943 13.7326 22.7943 11.7377Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M22.3824 7L17.7728 11.9782C17.4252 12.3536 16.9275 12.5533 16.4169 12.5224L11.3233 12.2137C10.7551 12.1793 10.2071 12.4303 9.86209 12.8831L7.52253 15.9537C7.25916 16.2994 6.87389 16.5316 6.44524 16.603L2.16016 17.3172'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M17.2255 12.3571L22.7969 6.99219L22.3842 19.7855L18.8763 22.2616L5.8763 22.468L2.98741 21.0236L1.54297 17.3094L7.1144 16.484L10.8287 12.1508L17.2255 12.3571Z'fill=#24223E fill-opacity=0.1></path></svg>",
+                            featureText: "Resource and workload optimization"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 26 26'width=26 xmlns=http://www.w3.org/2000/svg><path d='M12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 13.124 1.12964 13.436 1.15408 13.7447C1.30857 15.6956 3.70894 16.1242 5.18747 14.8421C7.99855 12.4043 12.4622 9.30736 17.0791 9.212C20.6282 9.1387 22.2871 10.88 23.0459 12.7667C23.3104 13.4242 24.498 13.5178 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862Z'fill=#242236 fill-opacity=0.09></path><path d='M17.0787 11.6847L13.9313 19.1036'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M23.5988 17.3133C24.1781 15.927 24.498 14.4054 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 14.5768 1.50954 16.2529 2.21192 17.755'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M5.16444 13.0643C5.16444 8.70187 8.78797 5.16539 13.2578 5.16539'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><circle cx=12.8072 cy=21.8017 fill=#242236 fill-opacity=0.09 r=2.69779 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></circle></svg>",
+                            featureText: "Dashboards and insights"
+                        }
+                    ],
+                    ctaButtonURL: "/checkout",
+                    ctaButtonContent: "Use this Solution <svg fill=none height=11 viewBox='0 0 15 11'width=15 xmlns=http://www.w3.org/2000/svg><path d='M14 5.5L0.999999 5.5M14 5.5L9.16279 1M14 5.5L9.16279 10'stroke=white stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>"
+                },
+                {
+                    navigationButton: {
+                        svgIcon: "<svg fill=none height=32 slot=svg-icon viewBox='0 0 32 32'width=32 xmlns=http://www.w3.org/2000/svg><path d='M16.1688 1.30798C21.2137 1.30798 24.6379 1.44468 26.8408 1.58787C28.8444 1.71811 30.3667 3.28169 30.5336 5.28266C30.6951 7.21881 30.857 9.66973 30.8602 11.7431C30.8636 13.9575 30.6859 16.6026 30.5191 18.5913C30.3672 20.402 29.0913 21.8782 27.2921 22.1313C25.2362 22.4205 22.0386 22.7243 17.4996 22.7739C17.077 22.7786 17.1939 22.781 16.748 22.781C16.748 22.781 14.9382 24.8945 12.5101 27.0191C9.73384 29.4483 7.70669 30.6921 7.70669 30.6921C7.70669 30.6921 7.98945 28.6429 7.98945 26.454C7.98945 24.9871 7.86246 23.6548 7.77869 22.9356C7.74112 22.613 7.46626 22.376 7.14161 22.376C6.36664 22.2975 5.68868 22.2141 5.10315 22.1318C3.30166 21.8786 2.02009 20.4003 1.86372 18.588C1.69217 16.5997 1.50794 13.9563 1.5045 11.7431C1.50127 9.66851 1.65704 7.21592 1.81392 5.27924C1.97587 3.27991 3.4926 1.71831 5.4943 1.58809C7.69666 1.44481 11.1213 1.30798 16.1688 1.30798Z'fill=#24223E fill-opacity=0.1></path><path d='M16.748 22.781C17.1939 22.781 17.077 22.7786 17.4996 22.7739M16.748 22.781L17.4996 22.7739M16.748 22.781C16.748 22.781 14.9382 24.8945 12.5101 27.0191C9.73384 29.4483 7.70669 30.6921 7.70669 30.6921C7.70669 30.6921 7.98945 28.6429 7.98945 26.454C7.98945 24.9871 7.86246 23.6548 7.77869 22.9356C7.74112 22.613 7.46626 22.376 7.14161 22.376V22.376C6.36664 22.2975 5.68868 22.2141 5.10315 22.1318C3.30166 21.8786 2.02009 20.4003 1.86372 18.588C1.69217 16.5997 1.50794 13.9563 1.5045 11.7431C1.50127 9.66851 1.65704 7.21592 1.81392 5.27924C1.97587 3.27991 3.4926 1.71831 5.4943 1.58809C7.69666 1.44481 11.1213 1.30798 16.1688 1.30798C21.2137 1.30798 24.6379 1.44468 26.8408 1.58787C28.8444 1.71811 30.3667 3.28169 30.5336 5.28266C30.6951 7.21881 30.857 9.66973 30.8602 11.7431C30.8636 13.9575 30.6859 16.6026 30.5191 18.5913C30.3672 20.402 29.0913 21.8782 27.2921 22.1313C25.2362 22.4205 22.0386 22.7243 17.4996 22.7739'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M9.40234 14.3048L17.3135 14.3048'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M9.40234 8.65393L22.9642 8.65393'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                        title: "Marketing"
+                    },
+                    contentTitle: "The complete marketing solution",
+                    contentDescription: "The all-in-one work hub for modern marketing teams, completely free.",
+                    contentList: [
+                        "Build visual plans that keep teams on track",
+                        "Fast track delivery with templates and calendars",
+                        "Leverage AI to accelerate content creation"
+                    ],
+                    featureList: [
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 26 24'width=26 xmlns=http://www.w3.org/2000/svg><rect height=7.84481 rx=3.92241 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2 width=7.84481 x=9.07617 y=8.07703></rect><path d='M10.823 21.1333C11.5197 21.3167 12.2487 21.4143 12.9994 21.4143C13.8255 21.4143 14.6255 21.2964 15.3849 21.0756L15.8252 21.879C16.3192 22.7805 17.2928 23.1628 18.1486 22.6423L19.1816 22.014C20.0373 21.4935 20.1948 20.4232 19.7007 19.5217L19.2615 18.7201C20.3709 17.5743 21.1983 16.1265 21.6236 14.503L22.5416 14.503C23.5297 14.503 24.3308 13.6591 24.3308 12.618L24.3308 11.3614C24.3308 10.3204 23.5297 9.47652 22.5416 9.47652L21.6236 9.47652C21.1983 7.85294 20.3709 6.40522 19.2615 5.2594L19.7007 4.45783C20.1948 3.55629 20.0373 2.48597 19.1815 1.96547L18.1486 1.33717C17.2928 0.816659 16.3343 1.20811 15.8402 2.10965L15.2985 2.87932C14.5648 2.67438 13.7942 2.56517 12.9994 2.56517C12.1732 2.56517 11.3733 2.68304 10.6138 2.90387L10.1586 2.10964C9.66449 1.2081 8.70589 0.81666 7.85015 1.33717L6.81717 1.96547C5.96143 2.48597 5.78892 3.5654 6.28298 4.46694L6.73728 5.2594C5.62783 6.40522 4.80047 7.85294 4.37513 9.47652L3.45714 9.47652C2.46901 9.47652 1.66797 10.3204 1.66797 11.3614L1.66797 12.618C1.66797 13.6591 2.46901 14.503 3.45714 14.503L4.37513 14.503C4.80047 16.1265 5.62783 17.5743 6.73728 18.7201L6.298 19.5217C5.80394 20.4232 5.96144 21.4935 6.81718 22.014L7.85016 22.6423C8.70591 23.1628 9.80014 22.8539 10.2942 21.9523L10.823 21.1333Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M12.9994 21.4142C12.2487 21.4142 11.5197 21.3166 10.823 21.1332L10.2942 21.9522C9.80014 22.8538 8.7059 23.1627 7.85016 22.6422L6.81718 22.0139C5.96144 21.4934 5.80394 20.4231 6.298 19.5215L6.73728 18.72C5.62783 17.5741 4.80047 16.1264 4.37512 14.5028H3.45713C2.469 14.5028 1.66797 13.6589 1.66797 12.6179V11.3613C1.66797 10.3203 2.469 9.4764 3.45713 9.4764H4.37512C4.80047 7.85282 5.62783 6.4051 6.73728 5.25928L6.28298 4.46683C5.78892 3.56528 5.96142 2.48585 6.81717 1.96535L7.85015 1.33705C8.70589 0.816541 9.66449 1.20798 10.1586 2.10952L10.6138 2.90375C11.3733 2.68292 12.1732 2.56505 12.9994 2.56505C13.7942 2.56505 14.5648 2.67426 15.2985 2.8792L15.8402 2.10954C16.3343 1.208 17.2928 0.816541 18.1486 1.33705L19.1815 1.96535C20.0373 2.48585 20.1948 3.55617 19.7007 4.45771L19.2615 5.25928C20.3709 6.4051 21.1983 7.85282 21.6236 9.4764H22.5416C23.5297 9.4764 24.3308 10.3203 24.3308 11.3613V12.6179C24.3308 13.6589 23.5297 14.5028 22.5416 14.5028H21.6236C21.1983 16.1264 20.3709 17.5741 19.2615 18.72L19.7007 19.5215C20.1948 20.4231 20.0373 21.4934 19.1816 22.0139L18.1486 22.6422C17.2928 23.1627 16.3192 22.7804 15.8252 21.8788L15.3849 21.0755C14.6255 21.2963 13.8255 21.4142 12.9994 21.4142ZM12.9986 8.07685C10.8323 8.07685 9.07617 9.83297 9.07617 11.9993C9.07617 14.1655 10.8323 15.9217 12.9986 15.9217C15.1649 15.9217 16.921 14.1655 16.921 11.9993C16.921 9.83297 15.1649 8.07685 12.9986 8.07685Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path></svg>",
+                            featureText: "Flexible workflows for every team"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 25 26'width=25 xmlns=http://www.w3.org/2000/svg><path d='M22.7506 21.6125C23.2458 20.2791 23.897 17.7638 23.897 13.7575C23.897 12.5527 23.6851 9.60969 23.6851 9.60969C23.6851 9.60969 19.8716 8.76224 12.8801 8.76224C5.88867 8.76224 1.8633 9.60969 1.8633 9.60969L1.86328 13.7575C1.86328 17.8428 2.54042 20.3544 3.03871 21.6495C3.32675 22.3982 3.91702 22.9588 4.68719 23.1833C5.94877 23.5509 8.42569 24.0163 12.8801 24.0163C17.2164 24.0163 19.6787 23.5955 20.9701 23.2496C21.8063 23.0256 22.4493 22.4241 22.7506 21.6125Z'fill=#242236 fill-opacity=0.09></path><path d='M10.3379 18.0842H14.9982'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M10.3379 14.2707H18.3874'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><rect fill=#24223E height=0.847322 rx=0.423661 stroke=#24223E stroke-linecap=round stroke-linejoin=round transform='rotate(-90 6.94727 14.6944)'width=0.847322 x=6.94727 y=14.6944></rect><rect fill=#24223E height=0.847322 rx=0.423661 stroke=#24223E stroke-linecap=round stroke-linejoin=round transform='rotate(-90 6.94727 18.5079)'width=0.847322 x=6.94727 y=18.5079></rect><path d='M23.7423 9.60942C23.7001 9.02554 23.6518 8.48926 23.6008 8.00154C23.3705 5.79842 21.6872 4.14939 19.4812 3.94846C17.8595 3.80075 15.6696 3.67728 12.8801 3.67728C10.0906 3.67728 7.90074 3.80075 6.27907 3.94846C4.07307 4.14939 2.38978 5.79842 2.15943 8.00154C2.10844 8.48926 2.06016 9.02554 2.01796 9.60942M23.7423 9.60942C23.834 10.8776 23.897 12.3704 23.897 14.0778C23.897 16.5626 23.7635 18.52 23.6025 19.9773C23.3757 22.0305 21.8199 23.5413 19.7634 23.7355C18.1554 23.8873 15.9012 24.0161 12.8801 24.0161C9.85904 24.0161 7.60483 23.8873 5.99689 23.7355C3.94033 23.5413 2.38458 22.0305 2.15774 19.9773C1.99674 18.52 1.86328 16.5626 1.86328 14.0778C1.86328 12.3704 1.9263 10.8776 2.01796 9.60942M23.7423 9.60942C23.7423 9.60942 19.6644 8.76197 12.8801 8.76197C6.09584 8.76197 2.01796 9.60942 2.01796 9.60942'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.97986 1.98264C6.97986 1.98264 6.94727 2.65353 6.94727 5.79616M18.779 1.98264C18.779 1.98264 18.8116 2.65353 18.8116 5.79616'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Visual roadmaps and calendars"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 25 24'width=25 xmlns=http://www.w3.org/2000/svg><path d='M1.75391 1.91306H13.8624'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M1.75391 6.92346H10.9396'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M1.75391 11.9339H8.43444'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M22.1692 1.07291L23.6514 3.50245L18.2342 17.2189L13.7289 15.4396L19.2739 1.59064L22.1692 1.07291Z'fill=#242236 fill-opacity=0.09></path><path d='M13.3258 15.8519L12.9537 16.7721C12.7807 17.2 12.6977 17.6573 12.716 18.1187C12.7722 19.5412 12.9289 22.653 13.2253 22.77C13.5205 22.8866 15.8481 20.781 16.9155 19.7946C17.2682 19.4687 17.5403 19.0687 17.7204 18.6234L18.1645 17.5251M13.3258 15.8519L18.6455 2.69599C19.1735 1.39014 20.6369 0.70737 21.9471 1.22478V1.22478V1.22478C23.2152 1.72562 23.8375 3.16035 23.3367 4.4285L18.1645 17.5251M13.3258 15.8519C13.3258 15.8519 14.1843 15.5172 15.8325 16.1682C17.4807 16.8191 18.1645 17.5251 18.1645 17.5251'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "AI-powered writing support"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 22 26'width=22 xmlns=http://www.w3.org/2000/svg><path d='M10.7854 24.0781C8.66867 24.0781 7.02115 23.9643 5.78178 23.8195C3.82327 23.5908 2.44609 22.0688 2.26769 20.1051C2.11868 18.4648 1.98828 16.1164 1.98828 12.9208C1.98828 9.72521 2.11868 7.37684 2.26769 5.73655C2.44609 3.77281 3.82327 2.25079 5.78178 2.02208C7.02115 1.87735 8.66867 1.76355 10.7854 1.76355C12.8827 1.76355 14.5752 1.87528 15.8821 2.01812C18.0211 2.2519 19.5602 3.92445 19.7456 6.06815C19.8889 7.72608 20.0116 9.99856 20.0116 12.9208C20.0116 13.9313 19.9969 14.8641 19.9718 15.7207C17.8175 17.5349 15.203 17.5033 13.9251 17.348C13.5866 17.3068 13.2658 17.647 13.3203 17.9836C13.5225 19.2321 13.608 21.7863 11.6278 24.0719C11.3546 24.076 11.0738 24.0781 10.7854 24.0781Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path><path d='M5.78195 23.8195C7.02132 23.9643 8.66884 24.0781 10.7855 24.0781C12.8828 24.0781 14.5754 23.9663 15.8823 23.8235C18.0212 23.5897 19.5604 21.9172 19.7457 19.7735C19.8891 18.1155 20.0117 15.8431 20.0117 12.9208C20.0117 9.99856 19.8891 7.72608 19.7457 6.06815C19.5604 3.92445 18.0212 2.2519 15.8823 2.01812C14.5754 1.87528 12.8828 1.76355 10.7855 1.76355C8.66884 1.76355 7.02132 1.87735 5.78195 2.02208C3.82344 2.25079 2.44625 3.77281 2.26786 5.73655C2.11885 7.37684 1.98845 9.72521 1.98845 12.9208C1.98845 16.1164 2.11885 18.4648 2.26786 20.1051C2.44625 22.0688 3.82344 23.5908 5.78195 23.8195Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M19.7969 15.4952C17.3478 18.1589 15.4715 15.5294 13.5746 17.4263C11.6776 19.3232 14.3071 21.1996 11.4289 23.8632'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 6.91272H15.2915'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 11.2042H12.2876'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Tasks, docs, spreadsheets, and more"
+                        },
+                    ],
+                    ctaButtonURL: "/checkout",
+                    ctaButtonContent: "Use this Solution <svg fill=none height=11 viewBox='0 0 15 11'width=15 xmlns=http://www.w3.org/2000/svg><path d='M14 5.5L0.999999 5.5M14 5.5L9.16279 1M14 5.5L9.16279 10'stroke=white stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>"
+                },
+                {
+                    navigationButton: {
+                        svgIcon: "<svg fill=none height=32 slot=svg-icon viewBox='0 0 32 32'width=32 xmlns=http://www.w3.org/2000/svg><path d='M30.1609 20.611C30.3515 18.979 30.5013 16.8095 30.5013 14.0223C30.5013 11.2605 30.3542 9.03166 30.1661 7.31077C29.8582 4.49416 27.6558 2.46733 24.8329 2.2233C22.6498 2.03456 19.6573 1.87305 15.8092 1.87305C11.9612 1.87305 8.96874 2.03456 6.78556 2.2233C3.9627 2.46733 1.76026 4.49416 1.45241 7.31077C1.26432 9.03166 1.11719 11.2605 1.11719 14.0223C1.11719 16.8095 1.26705 18.979 1.45763 20.611C1.75879 23.19 3.76301 25.0035 6.34889 25.2384C8.50887 25.4347 11.6012 25.6064 15.8092 25.6064C20.0173 25.6064 23.1096 25.4347 25.2696 25.2384C27.8555 25.0035 29.8597 23.19 30.1609 20.611Z'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2 fill=#24223E fill-opacity=0.1></path><rect fill=#514B81 height=1.13016 rx=0.565079 stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2 transform='rotate(-90 23.7207 20.5208)'width=1.13016 x=23.7207 y=20.5208></rect><path d='M25.4158 30.1271C25.4158 30.1271 22.5036 29.562 15.8095 29.562C9.11537 29.562 6.20312 30.1271 6.20312 30.1271'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                        title: "Product"
+                    },
+                    contentTitle: "Plan, build, & ship, all in one place",
+                    contentDescription: "The only all-in-one product management toolkit, completely free.",
+                    contentList: [
+                        "Get flexible agile workflows for fast moving teams",
+                        "Reduce development time with visual roadmaps",
+                        "Communicate product updates and priorities"
+                    ],
+                    featureList: [
+                        {
+                            svgIcon: "<svg fill=none height=25 viewBox='0 0 25 25'width=25 xmlns=http://www.w3.org/2000/svg><path d='M5.55558 17.983L6.91121 19.3386C7.68708 20.1145 8.98998 19.951 9.56841 19.0186C10.4407 17.6125 11.6746 15.6935 12.7271 14.3191C14.2527 12.3271 16.7007 9.77738 17.9304 8.52709C18.3456 8.10486 18.3459 7.42566 17.9271 7.00692C17.5231 6.60292 16.8741 6.5866 16.4494 6.96876C15.1262 8.15937 12.3304 10.6382 10.233 12.2442C8.91657 13.2521 7.11889 14.4954 5.81021 15.3823C4.93056 15.9785 4.8042 17.2316 5.55558 17.983Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682 fill=#242236 fill-opacity=0.09></path><path d='M2.25304 21.9363L3.035 22.7182C3.58698 23.2702 4.44686 23.3683 5.10896 22.9548L6.65586 21.9886C7.57065 21.4173 7.71594 20.1434 6.95329 19.3807L5.59057 18.018C4.82791 17.2553 3.554 17.4006 2.98265 18.3154L2.01651 19.8623C1.60299 20.5244 1.70106 21.3843 2.25304 21.9363Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M21.4336 5.69165L21.4336 1.49959'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M19.3359 3.59558L23.528 3.59558'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M18.0801 14.0757L20.1888 17.8486'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M17.248 17.0167L21.0209 14.908'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M11.7988 4.89368L13.5016 1.49959'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M14.3477 4.04797L10.9536 2.34521'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path></svg>",
+                            featureText: "Agile task and issue management"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 26 26'width=26 xmlns=http://www.w3.org/2000/svg><path d='M12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 13.124 1.12964 13.436 1.15408 13.7447C1.30857 15.6956 3.70894 16.1242 5.18747 14.8421C7.99855 12.4043 12.4622 9.30736 17.0791 9.212C20.6282 9.1387 22.2871 10.88 23.0459 12.7667C23.3104 13.4242 24.498 13.5178 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862Z'fill=#242236 fill-opacity=0.09></path><path d='M17.0787 11.6847L13.9313 19.1036'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M23.5988 17.3133C24.1781 15.927 24.498 14.4054 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 14.5768 1.50954 16.2529 2.21192 17.755'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M5.16444 13.0643C5.16444 8.70187 8.78797 5.16539 13.2578 5.16539'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><circle cx=12.8072 cy=21.8017 fill=#242236 fill-opacity=0.09 r=2.69779 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></circle></svg>",
+                            featureText: "Insights and dashboards"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=40 viewBox='0 0 41 40'width=41 xmlns=http://www.w3.org/2000/svg><path d='M20.0176 39.999C23.9177 39.999 27.1721 39.8516 29.8069 39.6481C35.2045 39.2311 39.2497 35.186 39.6667 29.7884C39.8702 27.1537 40.0176 23.8994 40.0176 19.9995C40.0176 16.0996 39.8702 12.8454 39.6667 10.2106C39.2497 4.81304 35.2045 0.767851 29.8069 0.35091C27.1721 0.147381 23.9177 -7.03733e-07 20.0176 -8.74206e-07C15.936 -1.05261e-06 12.5616 0.161415 9.86447 0.379677C4.6626 0.80063 0.772541 4.64006 0.370758 9.84345C0.166061 12.4944 0.0175851 15.8481 0.0175849 19.9995C0.0175847 24.1509 0.16606 27.5046 0.370757 30.1555C0.77254 35.3589 4.6626 39.1984 9.86447 39.6193C12.5616 39.8376 15.936 39.999 20.0176 39.999Z'fill=#F8F8FC></path><path d='M31.0245 19.9995C31.0245 17.1268 30.8792 14.8907 30.709 13.2566C30.4874 11.1292 28.8884 9.53023 26.761 9.30862C25.127 9.1384 22.8908 8.9931 20.0181 8.9931C17.1454 8.9931 14.9093 9.1384 13.2753 9.30862C11.1478 9.53023 9.54885 11.1292 9.32723 13.2566C9.15702 14.8907 9.01172 17.1268 9.01172 19.9995C9.01172 22.9567 9.1657 25.2394 9.34232 26.8851C9.56237 28.9353 11.0787 30.4786 13.1294 30.6939C14.7366 30.8626 16.9924 31.0059 20.0181 31.0059C23.0439 31.0059 25.2997 30.8626 26.9069 30.6939C28.9576 30.4786 30.4739 28.9353 30.6939 26.8851C30.8706 25.2394 31.0245 22.9567 31.0245 19.9995Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.69329 fill=#242236 fill-opacity=0.09></path><path d='M14.5156 14.9196H25.522'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.69329></path><path d='M14.5156 25.0795H25.522'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.69329></path><path d='M14.5156 19.9995H25.522'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.69329></path></svg>",
+                            featureText: "Whiteboards and diagramming"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 22 26'width=22 xmlns=http://www.w3.org/2000/svg><path d='M10.7854 24.0781C8.66867 24.0781 7.02115 23.9643 5.78178 23.8195C3.82327 23.5908 2.44609 22.0688 2.26769 20.1051C2.11868 18.4648 1.98828 16.1164 1.98828 12.9208C1.98828 9.72521 2.11868 7.37684 2.26769 5.73655C2.44609 3.77281 3.82327 2.25079 5.78178 2.02208C7.02115 1.87735 8.66867 1.76355 10.7854 1.76355C12.8827 1.76355 14.5752 1.87528 15.8821 2.01812C18.0211 2.2519 19.5602 3.92445 19.7456 6.06815C19.8889 7.72608 20.0116 9.99856 20.0116 12.9208C20.0116 13.9313 19.9969 14.8641 19.9718 15.7207C17.8175 17.5349 15.203 17.5033 13.9251 17.348C13.5866 17.3068 13.2658 17.647 13.3203 17.9836C13.5225 19.2321 13.608 21.7863 11.6278 24.0719C11.3546 24.076 11.0738 24.0781 10.7854 24.0781Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path><path d='M5.78195 23.8195C7.02132 23.9643 8.66884 24.0781 10.7855 24.0781C12.8828 24.0781 14.5754 23.9663 15.8823 23.8235C18.0212 23.5897 19.5604 21.9172 19.7457 19.7735C19.8891 18.1155 20.0117 15.8431 20.0117 12.9208C20.0117 9.99856 19.8891 7.72608 19.7457 6.06815C19.5604 3.92445 18.0212 2.2519 15.8823 2.01812C14.5754 1.87528 12.8828 1.76355 10.7855 1.76355C8.66884 1.76355 7.02132 1.87735 5.78195 2.02208C3.82344 2.25079 2.44625 3.77281 2.26786 5.73655C2.11885 7.37684 1.98845 9.72521 1.98845 12.9208C1.98845 16.1164 2.11885 18.4648 2.26786 20.1051C2.44625 22.0688 3.82344 23.5908 5.78195 23.8195Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M19.7969 15.4952C17.3478 18.1589 15.4715 15.5294 13.5746 17.4263C11.6776 19.3232 14.3071 21.1996 11.4289 23.8632'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 6.91272H15.2915'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 11.2042H12.2876'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Docs, spreadsheets, and more"
+                        },
+                    ],
+                    ctaButtonURL: "/checkout",
+                    ctaButtonContent: "Use this Solution <svg fill=none height=11 viewBox='0 0 15 11'width=15 xmlns=http://www.w3.org/2000/svg><path d='M14 5.5L0.999999 5.5M14 5.5L9.16279 1M14 5.5L9.16279 10'stroke=white stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>"
+                },
+                {
+                    navigationButton: {
+                        svgIcon: "<svg fill=none height=33 slot=svg-icon viewBox='0 0 33 33'width=33 xmlns=http://www.w3.org/2000/svg><path d='M29.3828 3.36211L31.3606 10.1431L30.7955 27.6605L25.9923 31.051L14.4082 31.2348L18.9288 1.66687L29.3828 3.36211Z'fill=#514B81 fill-opacity=0.1></path><path d='M10.4523 16.6416L7.79549 12.125C7.69146 11.9481 7.69146 11.7288 7.79549 11.5519L10.4524 7.03528'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M22.8855 16.6418L25.5424 21.1585C25.6464 21.3353 25.6464 21.5547 25.5424 21.7315L22.8855 26.2482'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M14.4091 30.7686L18.9297 2.23205'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M31.3607 16.6412C31.3607 12.8065 31.1667 9.82154 30.9395 7.64035C30.6437 4.8005 28.5093 2.66609 25.6694 2.37027C23.4882 2.14305 20.5033 1.9491 16.6686 1.9491C12.834 1.9491 9.849 2.14305 7.66781 2.37027C4.82797 2.66609 2.69356 4.8005 2.39773 7.64035C2.17052 9.82154 1.97656 12.8065 1.97656 16.6412C1.97656 20.5887 2.1821 23.6357 2.41787 25.8325C2.71161 28.5692 4.73565 30.6294 7.47309 30.9167C9.61848 31.1419 12.6296 31.3332 16.6686 31.3332C20.7076 31.3332 23.7188 31.1419 25.8642 30.9167C28.6016 30.6294 30.6256 28.5692 30.9194 25.8325C31.1551 23.6357 31.3607 20.5887 31.3607 16.6412Z'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                        title: "Engineering"
+                    },
+                    contentTitle: "More building, less busy work",
+                    contentDescription: "Your end-to-end product development platform, completely free.",
+                    contentList: [
+                        "Get flexible agile workflows for fast moving teams",
+                        "Track dependencies and resources across squads",
+                        "Automate and integrate across your tech stack"
+                    ],
+                    featureList: [
+                        {
+                            svgIcon: "<svg fill=none height=25 viewBox='0 0 25 25'width=25 xmlns=http://www.w3.org/2000/svg><path d='M5.55558 17.983L6.91121 19.3386C7.68708 20.1145 8.98998 19.951 9.56841 19.0186C10.4407 17.6125 11.6746 15.6935 12.7271 14.3191C14.2527 12.3271 16.7007 9.77738 17.9304 8.52709C18.3456 8.10486 18.3459 7.42566 17.9271 7.00692C17.5231 6.60292 16.8741 6.5866 16.4494 6.96876C15.1262 8.15937 12.3304 10.6382 10.233 12.2442C8.91657 13.2521 7.11889 14.4954 5.81021 15.3823C4.93056 15.9785 4.8042 17.2316 5.55558 17.983Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682 fill=#242236 fill-opacity=0.09></path><path d='M2.25304 21.9363L3.035 22.7182C3.58698 23.2702 4.44686 23.3683 5.10896 22.9548L6.65586 21.9886C7.57065 21.4173 7.71594 20.1434 6.95329 19.3807L5.59057 18.018C4.82791 17.2553 3.554 17.4006 2.98265 18.3154L2.01651 19.8623C1.60299 20.5244 1.70106 21.3843 2.25304 21.9363Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M21.4336 5.69165L21.4336 1.49959'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M19.3359 3.59558L23.528 3.59558'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M18.0801 14.0757L20.1888 17.8486'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M17.248 17.0167L21.0209 14.908'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M11.7988 4.89368L13.5016 1.49959'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path><path d='M14.3477 4.04797L10.9536 2.34521'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=1.67682></path></svg>",
+                            featureText: "Agile task and issue management"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 26 26'width=26 xmlns=http://www.w3.org/2000/svg><path d='M12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 13.124 1.12964 13.436 1.15408 13.7447C1.30857 15.6956 3.70894 16.1242 5.18747 14.8421C7.99855 12.4043 12.4622 9.30736 17.0791 9.212C20.6282 9.1387 22.2871 10.88 23.0459 12.7667C23.3104 13.4242 24.498 13.5178 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862Z'fill=#242236 fill-opacity=0.09></path><path d='M17.0787 11.6847L13.9313 19.1036'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M23.5988 17.3133C24.1781 15.927 24.498 14.4054 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 14.5768 1.50954 16.2529 2.21192 17.755'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M5.16444 13.0643C5.16444 8.70187 8.78797 5.16539 13.2578 5.16539'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><circle cx=12.8072 cy=21.8017 fill=#242236 fill-opacity=0.09 r=2.69779 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></circle></svg>",
+                            featureText: "Insights and dashboards"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 24 24'width=24 xmlns=http://www.w3.org/2000/svg><path d='M5.90486 1.43237L5.90486 10.1705M5.90486 1.43237L2.65348 4.68376M5.90486 1.43237L9.15625 4.68376'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M10.3749 18.0956C10.3749 17.6195 10.3651 17.1864 10.3487 16.7954C10.2753 15.0368 8.96309 13.7246 7.20446 13.6511C6.81348 13.6348 6.38039 13.625 5.90425 13.625C5.42811 13.625 4.99502 13.6348 4.60403 13.6511C2.84541 13.7246 1.53321 15.0368 1.45975 16.7954C1.44342 17.1864 1.43359 17.6195 1.43359 18.0956C1.43359 18.6197 1.4455 19.0916 1.46488 19.5126C1.54291 21.2077 2.78976 22.4654 4.48505 22.5377C4.90262 22.5555 5.37436 22.5663 5.90425 22.5663C6.43413 22.5663 6.90588 22.5555 7.32344 22.5377C9.01874 22.4654 10.2656 21.2077 10.3436 19.5126C10.363 19.0916 10.3749 18.6197 10.3749 18.0956Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2 fill=#242236 fill-opacity=0.09></path><path d='M18.0971 22.5661L18.0971 13.828M18.0971 22.5661L21.3485 19.3147M18.0971 22.5661L14.8457 19.3147'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M13.6251 5.90282C13.6251 6.37896 13.6349 6.81205 13.6513 7.20303C13.7247 8.96166 15.0369 10.2739 16.7955 10.3473C17.1865 10.3636 17.6196 10.3735 18.0958 10.3735C18.5719 10.3735 19.005 10.3636 19.396 10.3473C21.1546 10.2739 22.4668 8.96166 22.5402 7.20303C22.5566 6.81205 22.5664 6.37896 22.5664 5.90282C22.5664 5.37875 22.5545 4.90683 22.5351 4.4858C22.4571 2.79076 21.2102 1.53307 19.5149 1.46079C19.0974 1.44299 18.6256 1.43216 18.0958 1.43216C17.5659 1.43216 17.0941 1.44299 16.6766 1.46079C14.9813 1.53307 13.7344 2.79076 13.6564 4.4858C13.637 4.90683 13.6251 5.37875 13.6251 5.90282Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Seamless 2-way Git sync"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 22 26'width=22 xmlns=http://www.w3.org/2000/svg><path d='M10.7854 24.0781C8.66867 24.0781 7.02115 23.9643 5.78178 23.8195C3.82327 23.5908 2.44609 22.0688 2.26769 20.1051C2.11868 18.4648 1.98828 16.1164 1.98828 12.9208C1.98828 9.72521 2.11868 7.37684 2.26769 5.73655C2.44609 3.77281 3.82327 2.25079 5.78178 2.02208C7.02115 1.87735 8.66867 1.76355 10.7854 1.76355C12.8827 1.76355 14.5752 1.87528 15.8821 2.01812C18.0211 2.2519 19.5602 3.92445 19.7456 6.06815C19.8889 7.72608 20.0116 9.99856 20.0116 12.9208C20.0116 13.9313 19.9969 14.8641 19.9718 15.7207C17.8175 17.5349 15.203 17.5033 13.9251 17.348C13.5866 17.3068 13.2658 17.647 13.3203 17.9836C13.5225 19.2321 13.608 21.7863 11.6278 24.0719C11.3546 24.076 11.0738 24.0781 10.7854 24.0781Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path><path d='M5.78195 23.8195C7.02132 23.9643 8.66884 24.0781 10.7855 24.0781C12.8828 24.0781 14.5754 23.9663 15.8823 23.8235C18.0212 23.5897 19.5604 21.9172 19.7457 19.7735C19.8891 18.1155 20.0117 15.8431 20.0117 12.9208C20.0117 9.99856 19.8891 7.72608 19.7457 6.06815C19.5604 3.92445 18.0212 2.2519 15.8823 2.01812C14.5754 1.87528 12.8828 1.76355 10.7855 1.76355C8.66884 1.76355 7.02132 1.87735 5.78195 2.02208C3.82344 2.25079 2.44625 3.77281 2.26786 5.73655C2.11885 7.37684 1.98845 9.72521 1.98845 12.9208C1.98845 16.1164 2.11885 18.4648 2.26786 20.1051C2.44625 22.0688 3.82344 23.5908 5.78195 23.8195Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M19.7969 15.4952C17.3478 18.1589 15.4715 15.5294 13.5746 17.4263C11.6776 19.3232 14.3071 21.1996 11.4289 23.8632'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 6.91272H15.2915'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 11.2042H12.2876'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Docs, spreadsheets, and more"
+                        },
+                    ],
+                    ctaButtonURL: "/checkout",
+                    ctaButtonContent: "Use this Solution <svg fill=none height=11 viewBox='0 0 15 11'width=15 xmlns=http://www.w3.org/2000/svg><path d='M14 5.5L0.999999 5.5M14 5.5L9.16279 1M14 5.5L9.16279 10'stroke=white stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>"
+                },
+                {
+                    navigationButton: {
+                        svgIcon: "<svg fill=none height=32 slot=svg-icon viewBox='0 0 33 32'width=33 xmlns=http://www.w3.org/2000/svg><path d='M29.2599 1.49329L31.5202 4.60122L24.4567 23.2488L17.6758 20.706L25.5869 1.77583L29.2599 1.49329Z'fill=#24223E fill-opacity=0.1></path><path d='M17.6531 21.398L17.1689 22.6377C16.9393 23.2258 16.8346 23.8529 16.8705 24.4832C16.9769 26.349 17.2497 30.3152 17.6531 30.4686C18.0541 30.6211 21.0204 27.9309 22.4252 26.627C22.9115 26.1756 23.284 25.6192 23.5254 25.0011L24.1 23.5296M17.6531 21.398L24.6199 3.55844C25.3198 1.76621 27.3081 0.809305 29.1065 1.49314V1.49314V1.49314C30.8568 2.15867 31.6672 4.15265 30.9861 5.89687L24.1 23.5296M17.6531 21.398C17.6531 21.398 19.0868 21.182 21.0646 21.8359C23.0423 22.4899 24.1 23.5296 24.1 23.5296'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M4.11133 6.29639C4.11133 6.29639 2.98117 8.54007 2.98117 15.9027C2.98117 23.2654 4.11132 25.5091 4.11132 25.5091'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.93743 3.47095C6.93743 3.47095 8.35013 2.62333 13.012 2.34079C17.6739 2.05825 20.2168 2.62333 20.2168 2.62333'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.93776 28.3345L12.8711 28.3345'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M1.85156 3.75355C1.85156 5.15793 2.99004 6.29641 4.39442 6.29641C5.7988 6.29641 6.93728 5.15793 6.93728 3.75355C6.93728 2.34917 5.7988 1.21069 4.39442 1.21069C2.99004 1.21069 1.85156 2.34917 1.85156 3.75355Z'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M1.85156 28.0519C1.85156 29.4563 2.99004 30.5947 4.39442 30.5947C5.7988 30.5947 6.93728 29.4563 6.93728 28.0519C6.93728 26.6475 5.7988 25.509 4.39442 25.509C2.99004 25.509 1.85156 26.6475 1.85156 28.0519Z'stroke=#514B81 stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                        title: "Agencies"
+                    },
+                    contentTitle: "The complete agency solution",
+                    contentDescription: "Deliver higher quality client work that's more profitable, faster.",
+                    contentList: [
+                        "Visualize projects, progress, and teamwork",
+                        "Speed up collaboration and feedback cycles",
+                        "Optimize resources and productivity"
+                    ],
+                    featureList: [
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 26 24'width=26 xmlns=http://www.w3.org/2000/svg><rect height=7.84481 rx=3.92241 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2 width=7.84481 x=9.07617 y=8.07703></rect><path d='M10.823 21.1333C11.5197 21.3167 12.2487 21.4143 12.9994 21.4143C13.8255 21.4143 14.6255 21.2964 15.3849 21.0756L15.8252 21.879C16.3192 22.7805 17.2928 23.1628 18.1486 22.6423L19.1816 22.014C20.0373 21.4935 20.1948 20.4232 19.7007 19.5217L19.2615 18.7201C20.3709 17.5743 21.1983 16.1265 21.6236 14.503L22.5416 14.503C23.5297 14.503 24.3308 13.6591 24.3308 12.618L24.3308 11.3614C24.3308 10.3204 23.5297 9.47652 22.5416 9.47652L21.6236 9.47652C21.1983 7.85294 20.3709 6.40522 19.2615 5.2594L19.7007 4.45783C20.1948 3.55629 20.0373 2.48597 19.1815 1.96547L18.1486 1.33717C17.2928 0.816659 16.3343 1.20811 15.8402 2.10965L15.2985 2.87932C14.5648 2.67438 13.7942 2.56517 12.9994 2.56517C12.1732 2.56517 11.3733 2.68304 10.6138 2.90387L10.1586 2.10964C9.66449 1.2081 8.70589 0.81666 7.85015 1.33717L6.81717 1.96547C5.96143 2.48597 5.78892 3.5654 6.28298 4.46694L6.73728 5.2594C5.62783 6.40522 4.80047 7.85294 4.37513 9.47652L3.45714 9.47652C2.46901 9.47652 1.66797 10.3204 1.66797 11.3614L1.66797 12.618C1.66797 13.6591 2.46901 14.503 3.45714 14.503L4.37513 14.503C4.80047 16.1265 5.62783 17.5743 6.73728 18.7201L6.298 19.5217C5.80394 20.4232 5.96144 21.4935 6.81718 22.014L7.85016 22.6423C8.70591 23.1628 9.80014 22.8539 10.2942 21.9523L10.823 21.1333Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M12.9994 21.4142C12.2487 21.4142 11.5197 21.3166 10.823 21.1332L10.2942 21.9522C9.80014 22.8538 8.7059 23.1627 7.85016 22.6422L6.81718 22.0139C5.96144 21.4934 5.80394 20.4231 6.298 19.5215L6.73728 18.72C5.62783 17.5741 4.80047 16.1264 4.37512 14.5028H3.45713C2.469 14.5028 1.66797 13.6589 1.66797 12.6179V11.3613C1.66797 10.3203 2.469 9.4764 3.45713 9.4764H4.37512C4.80047 7.85282 5.62783 6.4051 6.73728 5.25928L6.28298 4.46683C5.78892 3.56528 5.96142 2.48585 6.81717 1.96535L7.85015 1.33705C8.70589 0.816541 9.66449 1.20798 10.1586 2.10952L10.6138 2.90375C11.3733 2.68292 12.1732 2.56505 12.9994 2.56505C13.7942 2.56505 14.5648 2.67426 15.2985 2.8792L15.8402 2.10954C16.3343 1.208 17.2928 0.816541 18.1486 1.33705L19.1815 1.96535C20.0373 2.48585 20.1948 3.55617 19.7007 4.45771L19.2615 5.25928C20.3709 6.4051 21.1983 7.85282 21.6236 9.4764H22.5416C23.5297 9.4764 24.3308 10.3203 24.3308 11.3613V12.6179C24.3308 13.6589 23.5297 14.5028 22.5416 14.5028H21.6236C21.1983 16.1264 20.3709 17.5741 19.2615 18.72L19.7007 19.5215C20.1948 20.4231 20.0373 21.4934 19.1816 22.0139L18.1486 22.6422C17.2928 23.1627 16.3192 22.7804 15.8252 21.8788L15.3849 21.0755C14.6255 21.2963 13.8255 21.4142 12.9994 21.4142ZM12.9986 8.07685C10.8323 8.07685 9.07617 9.83297 9.07617 11.9993C9.07617 14.1655 10.8323 15.9217 12.9986 15.9217C15.1649 15.9217 16.921 14.1655 16.921 11.9993C16.921 9.83297 15.1649 8.07685 12.9986 8.07685Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path></svg>",
+                            featureText: "Flexible workflows for every team"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 22 26'width=22 xmlns=http://www.w3.org/2000/svg><path d='M10.7854 24.0781C8.66867 24.0781 7.02115 23.9643 5.78178 23.8195C3.82327 23.5908 2.44609 22.0688 2.26769 20.1051C2.11868 18.4648 1.98828 16.1164 1.98828 12.9208C1.98828 9.72521 2.11868 7.37684 2.26769 5.73655C2.44609 3.77281 3.82327 2.25079 5.78178 2.02208C7.02115 1.87735 8.66867 1.76355 10.7854 1.76355C12.8827 1.76355 14.5752 1.87528 15.8821 2.01812C18.0211 2.2519 19.5602 3.92445 19.7456 6.06815C19.8889 7.72608 20.0116 9.99856 20.0116 12.9208C20.0116 13.9313 19.9969 14.8641 19.9718 15.7207C17.8175 17.5349 15.203 17.5033 13.9251 17.348C13.5866 17.3068 13.2658 17.647 13.3203 17.9836C13.5225 19.2321 13.608 21.7863 11.6278 24.0719C11.3546 24.076 11.0738 24.0781 10.7854 24.0781Z'clip-rule=evenodd fill=#242236 fill-opacity=0.09 fill-rule=evenodd></path><path d='M5.78195 23.8195C7.02132 23.9643 8.66884 24.0781 10.7855 24.0781C12.8828 24.0781 14.5754 23.9663 15.8823 23.8235C18.0212 23.5897 19.5604 21.9172 19.7457 19.7735C19.8891 18.1155 20.0117 15.8431 20.0117 12.9208C20.0117 9.99856 19.8891 7.72608 19.7457 6.06815C19.5604 3.92445 18.0212 2.2519 15.8823 2.01812C14.5754 1.87528 12.8828 1.76355 10.7855 1.76355C8.66884 1.76355 7.02132 1.87735 5.78195 2.02208C3.82344 2.25079 2.44625 3.77281 2.26786 5.73655C2.11885 7.37684 1.98845 9.72521 1.98845 12.9208C1.98845 16.1164 2.11885 18.4648 2.26786 20.1051C2.44625 22.0688 3.82344 23.5908 5.78195 23.8195Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M19.7969 15.4952C17.3478 18.1589 15.4715 15.5294 13.5746 17.4263C11.6776 19.3232 14.3071 21.1996 11.4289 23.8632'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 6.91272H15.2915'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M6.70898 11.2042H12.2876'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>",
+                            featureText: "Tasks, docs, spreadsheets, and more"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=24 viewBox='0 0 24 24'width=24 xmlns=http://www.w3.org/2000/svg><path d='M22.7943 11.7377C22.7943 9.84448 22.7296 8.23485 22.6363 6.89845C22.4165 3.74637 20.0557 1.38562 16.9036 1.16577C15.5672 1.07255 13.9575 1.00781 12.0641 1.00781C10.1708 1.00781 8.5611 1.07255 7.22465 1.16577C4.07257 1.38562 1.7118 3.74637 1.49194 6.89845C1.39872 8.23485 1.33398 9.84448 1.33398 11.7377C1.33398 13.7326 1.40586 15.4126 1.5072 16.7899C1.73071 19.8278 3.97163 22.0952 7.0103 22.3071C8.36641 22.4017 10.0382 22.4676 12.0641 22.4676C14.09 22.4676 15.7619 22.4017 17.118 22.3071C20.1567 22.0952 22.3976 19.8278 22.6211 16.7899C22.7224 15.4126 22.7943 13.7326 22.7943 11.7377Z'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M22.3824 7L17.7728 11.9782C17.4252 12.3536 16.9275 12.5533 16.4169 12.5224L11.3233 12.2137C10.7551 12.1793 10.2071 12.4303 9.86209 12.8831L7.52253 15.9537C7.25916 16.2994 6.87389 16.5316 6.44524 16.603L2.16016 17.3172'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M17.2255 12.3571L22.7969 6.99219L22.3842 19.7855L18.8763 22.2616L5.8763 22.468L2.98741 21.0236L1.54297 17.3094L7.1144 16.484L10.8287 12.1508L17.2255 12.3571Z'fill=#24223E fill-opacity=0.1></path></svg>",
+                            featureText: "Resource and workload optimization"
+                        },
+                        {
+                            svgIcon: "<svg fill=none height=26 viewBox='0 0 26 26'width=26 xmlns=http://www.w3.org/2000/svg><path d='M12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 13.124 1.12964 13.436 1.15408 13.7447C1.30857 15.6956 3.70894 16.1242 5.18747 14.8421C7.99855 12.4043 12.4622 9.30736 17.0791 9.212C20.6282 9.1387 22.2871 10.88 23.0459 12.7667C23.3104 13.4242 24.498 13.5178 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862Z'fill=#242236 fill-opacity=0.09></path><path d='M17.0787 11.6847L13.9313 19.1036'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M23.5988 17.3133C24.1781 15.927 24.498 14.4054 24.498 12.8091C24.498 6.35261 19.2641 1.11862 12.8076 1.11862C6.35117 1.11862 1.11719 6.3526 1.11719 12.809C1.11719 14.5768 1.50954 16.2529 2.21192 17.755'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><path d='M5.16444 13.0643C5.16444 8.70187 8.78797 5.16539 13.2578 5.16539'stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></path><circle cx=12.8072 cy=21.8017 fill=#242236 fill-opacity=0.09 r=2.69779 stroke=#24223E stroke-linecap=round stroke-linejoin=round stroke-width=2></circle></svg>",
+                            featureText: "Dashboards and insights"
+                        }
+                    ],
+                    ctaButtonURL: "/checkout",
+                    ctaButtonContent: "Use this Solution <svg fill=none height=11 viewBox='0 0 15 11'width=15 xmlns=http://www.w3.org/2000/svg><path d='M14 5.5L0.999999 5.5M14 5.5L9.16279 1M14 5.5L9.16279 10'stroke=white stroke-linecap=round stroke-linejoin=round stroke-width=2></path></svg>"
+                }
+            ]
+        };
+
+        Object.assign(teamCarouselEl, properties);
+    });
+</script>
